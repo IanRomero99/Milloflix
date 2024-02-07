@@ -53,10 +53,10 @@ if ($resultado['nombre_rol'] === "Admin") {
     echo '<script>
             Swal.fire({
                 title: "Aceptado",
-                text: "Has entrado a la página principal del Camarero",
+                text: "Has entrado a la página principal del Cliente",
                 icon: "success"
             });
-            window.location.href = "../view/index.php";
+            window.location.href = "../view/admin.php";
           </script>';
     exit();
         }

@@ -75,6 +75,15 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_genero` (
   PRIMARY KEY (`id_gen`))
 ENGINE = InnoDB;
 
+-- Insertar género "Acción"
+INSERT INTO `bd_milloflix`.`tbl_genero` (`nombre_gen`) VALUES ('Acción');
+
+-- Insertar género "Comedia"
+INSERT INTO `bd_milloflix`.`tbl_genero` (`nombre_gen`) VALUES ('Comedia');
+
+-- Insertar género "Drama"
+INSERT INTO `bd_milloflix`.`tbl_genero` (`nombre_gen`) VALUES ('Drama');
+
 
 -- -----------------------------------------------------
 -- Table `bd_milloflix`.`tbl_pais`
@@ -85,6 +94,15 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_pais` (
   PRIMARY KEY (`id_pais`))
 ENGINE = InnoDB;
 
+-- Insertar país "Estados Unidos"
+INSERT INTO `bd_milloflix`.`tbl_pais` (`nombre_pais`) VALUES ('Estados Unidos');
+
+-- Insertar país "Reino Unido"
+INSERT INTO `bd_milloflix`.`tbl_pais` (`nombre_pais`) VALUES ('Reino Unido');
+
+-- Insertar país "Francia"
+INSERT INTO `bd_milloflix`.`tbl_pais` (`nombre_pais`) VALUES ('Francia');
+
 
 -- -----------------------------------------------------
 -- Table `bd_milloflix`.`tbl_ano`
@@ -94,6 +112,16 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_ano` (
   `ano` VARCHAR(45) NULL,
   PRIMARY KEY (`id_ano_peli`))
 ENGINE = InnoDB;
+
+-- Insertar un año específico
+INSERT INTO `bd_milloflix`.`tbl_ano` (`ano`) VALUES ('2000');
+
+-- Insertar otro año específico
+INSERT INTO `bd_milloflix`.`tbl_ano` (`ano`) VALUES ('2010');
+
+-- Insertar un tercer año específico
+INSERT INTO `bd_milloflix`.`tbl_ano` (`ano`) VALUES ('2020');
+
 
 
 -- -----------------------------------------------------
@@ -179,6 +207,16 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_estado` (
   PRIMARY KEY (`id_estado`))
 ENGINE = InnoDB;
 
+-- Insertar estado "Pendiente"
+INSERT INTO `bd_milloflix`.`tbl_estado` (`nombre_estado`) VALUES ('Pendiente');
+
+-- Insertar estado "Aceptado"
+INSERT INTO `bd_milloflix`.`tbl_estado` (`nombre_estado`) VALUES ('Aceptado');
+
+-- Insertar estado "Rechazado"
+INSERT INTO `bd_milloflix`.`tbl_estado` (`nombre_estado`) VALUES ('Rechazado');
+
+
 
 -- -----------------------------------------------------
 -- Table `bd_milloflix`.`tbl_solicitud`
@@ -210,6 +248,17 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_solicitud` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- Insertar solicitud con estado pendiente
+INSERT INTO `bd_milloflix`.`tbl_solicitud` (`id_emisor`, `id_receptor`, `id_estado`) 
+VALUES (3, 1, 1);
+
+-- Insertar solicitud con estado aceptado
+INSERT INTO `bd_milloflix`.`tbl_solicitud` (`id_emisor`, `id_receptor`, `id_estado`) 
+VALUES (3, 4, 2);
+
+-- Insertar solicitud con estado rechazado
+INSERT INTO `bd_milloflix`.`tbl_solicitud` (`id_emisor`, `id_receptor`, `id_estado`) 
+VALUES (5, 6, 3);
 
 -- -----------------------------------------------------
 -- Table `bd_milloflix`.`tbl_personal`

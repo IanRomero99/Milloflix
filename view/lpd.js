@@ -32,39 +32,37 @@ function botonSalir () {
 
 }
 
-function validar_reg () {
+function validar_registrar() {
   // Validar usuario
-  var crear = document.getElementById("formulario_reg");
-
   var input_usuario = document.getElementById("username");
   var error_usuario = document.getElementById("error_nombre_reg");
 
   if (input_usuario.value.trim() === "" || /^\s+$/.test(input_usuario.value)) {
-    error_usuario.textContent = "El usuario está vacío";
-    error_usuario.style.color = "red";
-    input_usuario.style.border = "1px solid red";
-    return false;
+      error_usuario.textContent = "El usuario está vacío";
+      error_usuario.style.color = "red";
+      input_usuario.style.border = "1px solid red";
+      return false;
   } else {
-    input_usuario.style.border = "";
-    error_usuario.textContent = "";
+      input_usuario.style.border = "";
+      error_usuario.textContent = "";
   }
 
   var palabras = input_usuario.value.split(" ");
   var palabrasValidas = 0;
 
   for (var i = 0; i < palabras.length; i++) {
-    if (palabras[i].length >= 1) {
-      palabrasValidas++;
-    }
+      if (palabras[i].length >= 1) {
+          palabrasValidas++;
+      }
   }
 
   if (palabrasValidas !== 1) {
-    error_usuario.textContent = "El usuario solo debe tener una palabra";
-    error_usuario.style.color = "red";
-    input_usuario.style.border = "1px solid red";
-    return false;
+      error_usuario.textContent = "El usuario solo debe tener una palabra";
+      error_usuario.style.color = "red";
+      input_usuario.style.border = "1px solid red";
+      return false;
   } else {
-    error_usuario.textContent = "";
+      error_usuario.textContent = "";
   }
 
   // Validar contraseña
@@ -72,22 +70,22 @@ function validar_reg () {
   var error_pwd = document.getElementById("error_pwd_reg");
 
   if (input_pwd.value.trim() === "" || /^\s+$/.test(input_pwd.value)) {
-    error_pwd.textContent = "La contraseña está vacía";
-    error_pwd.style.color = "red";
-    input_pwd.style.border = "1px solid red";
-    return false;
+      error_pwd.textContent = "La contraseña está vacía";
+      error_pwd.style.color = "red";
+      input_pwd.style.border = "1px solid red";
+      return false;
   } else {
-    input_pwd.style.border = "";
-    error_pwd.textContent = "";
+      input_pwd.style.border = "";
+      error_pwd.textContent = "";
   }
 
   if (input_pwd.value.length < 9) {
-    error_pwd.textContent = "La contraseña no cumple los requisitos";
-    error_pwd.style.color = "red";
-    input_pwd.style.border = "1px solid red";
-    return false;
+      error_pwd.textContent = "La contraseña no cumple los requisitos";
+      error_pwd.style.color = "red";
+      input_pwd.style.border = "1px solid red";
+      return false;
   } else {
-    error_pwd.textContent = "";
+      error_pwd.textContent = "";
   }
 
   // Agrega aquí la validación del rol si es necesario
@@ -95,87 +93,171 @@ function validar_reg () {
   return true;
 }
 
+
 function CrearUsuario() {
   var form_registrar = document.getElementById("formulario_reg");
-  
   var formdata = new FormData(form_registrar);
-      
   var ajax = new XMLHttpRequest();
+
+  // Definimos la función que manejará la respuesta de la solicitud Ajax
+  ajax.onreadystatechange = function() {
+    // Si se ha completado la solicitud y la respuesta está lista
+    if (ajax.readyState == 4) {
+      // Verificamos el estado de la respuesta
+      if (ajax.status == 200) {
+        console.log(ajax.responseText)
+        var resultado = JSON.parse(ajax.responseText);
+        if (resultado == "ok") {
+          Swal.fire({
+            icon: 'success',
+            title: 'Usuario creado',
+            showConfirmButton: false,
+            timer: 1500
+          });
+          // Resetear el formulario
+          form_registrar.reset();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al crear el usuario',
+            showCancelButton: false,
+            timer: 1500
+          });
+        }
+      } else {
+        console.error("Error en la solicitud AJAX: " + ajax.status);
+      }
+    }
+  };
+
+  // Configuramos la solicitud Ajax
+  ajax.open("POST", "../proc/proc_registrarse.php", true);
+  ajax.send(formdata);
+}
+
+
   
-      // Definimos la función que manejará la respuesta de la solicitud Ajax
-      ajax.onreadystatechange = function() {
-      
-          // Si se ha completado la solicitud y la respuesta está lista
-          if (ajax.status == 200 && ajax.readyState == 4) {
+
+function IniciarSesion() {
+  var form_iniciar_sesion = document.getElementById("formulario_ini");
+  var formdata = new FormData(form_iniciar_sesion);
+  var ajax = new XMLHttpRequest();
+
+  // Definimos la función que manejará la respuesta de la solicitud Ajax
+  ajax.onreadystatechange = function() {
+      // Si se ha completado la solicitud y la respuesta está lista
+      if (ajax.readyState == 4) {
+          // Verificamos el estado de la respuesta
+          if (ajax.status == 200) {
               // Parseamos la respuesta JSON
-              var respuestas = ajax.responseText;
-              console.log(respuestas);
+              var resultado = ajax.responseText;
+              console.log(resultado);
               if (ajax.responseText == "ok") {
                   Swal.fire({
                       icon: 'success',
-                      title: 'Usuario creado',
+                      title: 'Has iniciado sesión',
                       showConfirmButton: false,
                       timer: 1500
                   });
                   // Resetear el formulario
-                  form_registrar.reset();
-  
-                  
-              }else{
+                  form_iniciar_sesion.reset();
+              } else {
                   Swal.fire({
                       icon: 'error',
-                      title: 'Error al crear el usuario',
+                      title: 'Error al iniciar sesión',
                       showCancelButton: false,
                       timer: 1500
                   });
               }
-  }
+          } else {
+              console.error("Error en la solicitud AJAX: " + ajax.status);
+          }
       }
-       // Configuramos la solicitud Ajax
-       ajax.open("POST", "../proc/proc_registrarse.php", true);
-       ajax.send(formdata);
-  }
+  };
 
-  function IniciarSesion () {
-    var form_iniciar_sesion = document.getElementById("formulario_ini");
+  // Configuramos la solicitud Ajax
+  ajax.open("POST", "../proc/proc_iniciar_sesion.php", true);
+  ajax.send(formdata);
+}
+
+// // BUSCADOR DEL USUARIO 
+// document.addEventListener('DOMContentLoaded', function() {
+//   var buscar = document.getElementById("buscar");
+
+//   if (buscar) {
+//       buscar.addEventListener("keyup", function() {
+//           var valor = buscar.value;
+//           if (valor === "") {
+//               listarUsuarios('');
+//           } else {
+//               listarUsuarios(valor);
+//           }
+//       });
+//   } else {
+//       console.error('Elemento con ID "buscar" no encontrado');
+//   }
+// });
+// listarUsuarios(''); //listamos usuarios
+
+// Listar usuarios
+// function listarUsuarios(valor) {
+//   var resultado = document.getElementById('resultado'); // Obtenemos el elemento con el id 'resultado' y lo guardamos en la variable resultado
   
-    var formdata = new FormData(form_iniciar_sesion);
-        
-    var ajax = new XMLHttpRequest();
-    
-        // Definimos la función que manejará la respuesta de la solicitud Ajax
-        ajax.onreadystatechange = function() {
-        
-            // Si se ha completado la solicitud y la respuesta está lista
-            if (ajax.status == 200 && ajax.readyState == 4) {
-                // Parseamos la respuesta JSON
-                var respuestas = ajax.responseText;
-                console.log(respuestas);
-                if (ajax.responseText == "ok") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Usuario creado',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    // Resetear el formulario
-                    form_iniciar_sesion.reset();
-    
-                    
-                }else{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error al crear el usuario',
-                        showCancelButton: false,
-                        timer: 1500
-                    });
-                }
-    }
-        }
-         // Configuramos la solicitud Ajax
-         ajax.open("POST", "../proc/proc_iniciar_sesion.php", true);
-         ajax.send(formdata);
-  }
+//   // Creamos una nueva instancia de FormData y agregamos la clave 'busqueda' con el valor proporcionado
+//   var formdata = new FormData();
+//   formdata.append('busqueda', valor);
+  
+//   // Creamos un objeto XMLHttpRequest
+//   var ajax = new XMLHttpRequest();
+  
+//   // Indicamos el método de envío y la URL del archivo PHP
+//   ajax.open('POST', '../proc/listar_usuarios.php');
+
+//   // Definimos la función que se ejecutará cuando la solicitud Ajax haya sido completada
+//   ajax.onload = function() {
+//       // Variable para construir la cadena de HTML
+//       var str = "";
+
+//       // Verificamos si la solicitud HTTP fue exitosa (código 200)
+//       if (ajax.status === 200) {
+//           // Parseamos la respuesta JSON del servidor
+//           var json = JSON.parse(ajax.responseText);
+//           // Variable para construir las filas de la tabla HTML
+//           var tabla = "";
+
+//           // Iteramos sobre cada elemento del array JSON
+//           json.forEach(function(item) {
+//               // Construimos una fila de la tabla con los datos del elemento actual
+//               str = "<tr><td>" + item.id_user + "</td>";
+//               str += "<td>" + item.nombre_user + "</td>";
+//               str += "<td>" + item.correo_user + "</td>";
+//               str += "<td>" + item.pwd_user + "</td>";
+//               str += "<td>" + item.nombre_rol + "</td>"; 
+//               // Agregamos esta línea para mostrar el tipo de rol
+//               str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_user + ")'>Editar</button>";
+//               str += "</td>";
+//               str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_user + ")'>Eliminar</button>";
+//               str += "</td>";
+//               str += "</tr>";
+//               tabla += str;
+              
+//           });
+
+//           // Insertamos la tabla construida en el elemento con id 'resultado'
+//           resultado.innerHTML = tabla;
+//       } else {
+//           // En caso de error, mostramos un mensaje de error en el elemento 'resultado'
+//           resultado.innerText = "Error en la solicitud Ajax";
+//       }
+//   };
+
+//   // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+//   ajax.send(formdata);
+// }
+
+
+
+
 // function validar_registrar () {
 
 // // Validar usuario
@@ -307,7 +389,3 @@ function CrearUsuario() {
 //   // }
   
 
-
-// function validar_iniciar_sesion () {
-  
-// }

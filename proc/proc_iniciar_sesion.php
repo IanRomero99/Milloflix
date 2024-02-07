@@ -1,75 +1,85 @@
 <?php
-// Creamos la variable de errores que está vacía
-$errores = "";
+// Creamos la variable de errores que está vacía 
+$errores = array();
 
-// Recogemos los datos que ha introducido el usuario
-$correo_ini = $_POST['correo_ini'];
-$pwd_ini = $_POST['pwd_ini'];
+// Hacemos un session_start
+session_start();
 
-// Creamos una variable que pasará la contraseña sha256 lo que hará que se encripte
-$pwdEncriptada = hash("sha256", $pwd_ini);
+// Verificar si el campo 'correo_ini' está presente en $_POST
+if (isset($_POST['correo_ini']) && isset($_POST['pwd_ini'])) {
+    // Recogemos los datos que ha introducido el usuario
+    $correo_ini = $_POST['correo_ini'];
+    $pwd_ini = $_POST['pwd_ini']; // Recogemos la contraseña del formulario
+    $pwdEncriptada = hash("sha256", $pwd_ini);
 
-// Si hay errores
-if ($errores != "") {
-    $datosRecibidos = array(
-        'correo_ini' => $correo_ini,
-        'pwd_ini' => $pwd_ini
-    );
-    $datosDevueltos = http_build_query($datosRecibidos);
-    header("Location: ../view/index.php" . $errores . "&" . $datosDevueltos);
-    exit();
-}
+    // Incluir el archivo de conexión a la base de datos
+    include_once("./conexion.php");
 
-// Aquí puedes realizar validaciones y manejo de errores si es necesario
+    // Verificar si el usuario y la contraseña coinciden en la base de datos
+    $sql_check = "SELECT correo_user, pwd_user FROM tbl_user WHERE correo_user = :correo_ini";
+    $stmt_check = $pdo->prepare($sql_check);
+    $stmt_check->bindParam(':correo_ini', $correo_ini, PDO::PARAM_STR);
+    $stmt_check->execute();
 
-include_once("./conexion.php");
-$sql_check = "SELECT COUNT(*) FROM tbl_user WHERE correo_user = :correo_ini";
-$stmt_check = $pdo->prepare($sql_check);
-$stmt_check->bindParam(':correo_ini', $correo_ini);
-$stmt_check->execute();
-$user_count = $stmt_check->fetchColumn();
-$stmt_check->closeCursor();
+    // Obtener el resultado
+    $resultado_check = $stmt_check->fetch(PDO::FETCH_ASSOC);
 
-if ($user_count > 0) {
-    // El usuario ya existe, agrega un mensaje de error a la variable $errores
-    if ($errores) {
-        $errores .= '&correoExist=true';
+    // Verificamos si se encontró algún resultado
+    if (!$resultado_check) {
+        // El usuario no existe, agregar un mensaje de error a la variable $errores
+        $errores['nombreNotExist'] = true;
     } else {
-        $errores = '?correoExist=true';
-    }
+        // El usuario existe, ahora verificamos la contraseña almacenada en la base de datos
+        $stored_password = $resultado_check['pwd_user'];
 
-    // Si hay errores
-    if ($errores != "") {
-        $datosRecibidos = array(
-            'correo_ini' => $correo_ini,
-            'pwd_ini' => $pwd_ini
-        );
-        $datosDevueltos = http_build_query($datosRecibidos);
-        header("Location: ../view/registrar.php" . $errores . "&" . $datosDevueltos);
-        exit();
-    }
-} else {
-    // El usuario no existe, procede con la inserción
-    $sql = "INSERT INTO tbl_user (`id_user`, `nombre_user`, `pwd_user`, `correo_user`) VALUES (NULL, '', :pwdEncriptada, :correo_ini)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindParam(':pwdEncriptada', $pwdEncriptada);
-    $stmt->bindParam(':correo_ini', $correo_ini);
-    $stmt->execute();
+        // Verificar si la contraseña ingresada coincide con la almacenada en la base de datos
+        if (hash_equals($pwdEncriptada, $stored_password)) {
+            // Contraseña coincide, redirigir a sessiones.php que la cogerá por la url
+            $_SESSION['correo_ini'] = $correo_ini; // Almacenar el correo en la sesión
+            
+            // Consulta para obtener el rol del usuario
+            $sql_rol = "SELECT r.nombre_rol
+                        FROM tbl_user u
+                        JOIN tbl_rol r ON u.id_rol = r.id_rol
+                        WHERE u.correo_user = :correo_ini";
+            $stmt_rol = $pdo->prepare($sql_rol);
+            $stmt_rol->bindParam(':correo_ini', $correo_ini, PDO::PARAM_STR);
+            $stmt_rol->execute();
+            
+            // Obtener el resultado
+            $resultado_rol = $stmt_rol->fetch(PDO::FETCH_ASSOC);
 
-    // Verifica si la inserción fue exitosa
-    if ($stmt->rowCount() > 0) {
-        echo "Usuario registrado exitosamente";
-        header('Location: ./sessiones.php');
-        exit();
-    } else {
-        // Agrega un mensaje de error en caso de fallo en la inserción
-        if ($errores) {
-            $errores .= '&insertError=true';
+            if ($resultado_rol['nombre_rol'] == 'Admin') {
+                echo '<script>
+                        Swal.fire({
+                            title: "Aceptado",
+                            text: "Has entrado a la página principal del Administrador",
+                            icon: "success"
+                        });
+                        window.location.href = "../view/admin.php";
+                      </script>';
+                exit();
+            } else {
+                echo '<script>
+                        Swal.fire({
+                            title: "Aceptado",
+                            text: "Has entrado a la página principal del Cliente",
+                            icon: "success"
+                        });
+                        window.location.href = "./index.php";
+                      </script>';
+                echo "ok";
+                exit();
+            }
         } else {
-            $errores = '?insertError=true';
+            // La contraseña no coincide, agregar un mensaje de error a la variable $errores
+            $errores['passwdIncorrect'] = true;
         }
-        header('Location: ../view/registrar.php' . $errores);
-        exit();
     }
 }
+
+// Convertir los errores a JSON y enviarlos como respuesta
+// header('Content-Type: application/json');
+// echo json_encode($errores);
+exit();
 ?>
