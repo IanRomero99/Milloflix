@@ -1,11 +1,8 @@
 <?php
-// Creamos la variable de errores que está vacía 
-$errores = array();
-
 // Hacemos un session_start
 session_start();
 
-// Verificar si el campo 'correo_ini' está presente en $_POST
+// Verificar si el campo 'correo_ini' y el 'pwd_ini' está presente en $_POST
 if (isset($_POST['correo_ini']) && isset($_POST['pwd_ini'])) {
     // Recogemos los datos que ha introducido el usuario
     $correo_ini = $_POST['correo_ini'];
@@ -16,70 +13,42 @@ if (isset($_POST['correo_ini']) && isset($_POST['pwd_ini'])) {
     include_once("./conexion.php");
 
     // Verificar si el usuario y la contraseña coinciden en la base de datos
-    $sql_check = "SELECT correo_user, pwd_user FROM tbl_user WHERE correo_user = :correo_ini";
+    $sql_check = "SELECT correo_user, pwd_user, id_rol, id_estado FROM tbl_user WHERE correo_user = :correo_ini";
     $stmt_check = $pdo->prepare($sql_check);
     $stmt_check->bindParam(':correo_ini', $correo_ini, PDO::PARAM_STR);
     $stmt_check->execute();
-
     // Obtener el resultado
     $resultado_check = $stmt_check->fetch(PDO::FETCH_ASSOC);
 
-    // Verificamos si se encontró algún resultado
-    if (!$resultado_check) {
-        // El usuario no existe, agregar un mensaje de error a la variable $errores
-        $errores['nombreNotExist'] = true;
+    if(!$resultado_check) {
+        // El usuario no existe
+        echo json_encode(["error" => "Noexiste"]);
     } else {
-        // El usuario existe, ahora verificamos la contraseña almacenada en la base de datos
-        $stored_password = $resultado_check['pwd_user'];
-
         // Verificar si la contraseña ingresada coincide con la almacenada en la base de datos
-        if (hash_equals($pwdEncriptada, $stored_password)) {
-            // Contraseña coincide, redirigir a sessiones.php que la cogerá por la url
-            $_SESSION['correo_ini'] = $correo_ini; // Almacenar el correo en la sesión
+        if (hash_equals($pwdEncriptada, $resultado_check['pwd_user'])) {
+            $rol = $resultado_check['id_rol'];
+            $estado = $resultado_check['id_estado'];
             
-            // Consulta para obtener el rol del usuario
-            $sql_rol = "SELECT r.nombre_rol
-                        FROM tbl_user u
-                        JOIN tbl_rol r ON u.id_rol = r.id_rol
-                        WHERE u.correo_user = :correo_ini";
-            $stmt_rol = $pdo->prepare($sql_rol);
-            $stmt_rol->bindParam(':correo_ini', $correo_ini, PDO::PARAM_STR);
-            $stmt_rol->execute();
-            
-            // Obtener el resultado
-            $resultado_rol = $stmt_rol->fetch(PDO::FETCH_ASSOC);
-
-            if ($resultado_rol['nombre_rol'] == 'Admin') {
-                echo '<script>
-                        Swal.fire({
-                            title: "Aceptado",
-                            text: "Has entrado a la página principal del Administrador",
-                            icon: "success"
-                        });
-                        window.location.href = "../view/admin.php";
-                      </script>';
-                exit();
-            } else {
-                echo '<script>
-                        Swal.fire({
-                            title: "Aceptado",
-                            text: "Has entrado a la página principal del Cliente",
-                            icon: "success"
-                        });
-                        window.location.href = "./index.php";
-                      </script>';
-                echo "ok";
-                exit();
+            if($rol == '2') {
+                if($estado == '1') {
+                    echo json_encode(["error" => "pendiente"]);
+                } else if($estado == '2') {
+                    $_SESSION['cliente'] = $correo_ini;
+                    echo json_encode(["success" => true, "role" => "cliente"]);
+                } else if($estado == '3') {
+                    echo json_encode(["error" => "inactivo"]);
+                }
+            } else if ($rol == '1') {
+                $_SESSION['admin'] = $correo_ini;
+                echo json_encode(["success" => true, "role" => "admin"]);
             }
         } else {
-            // La contraseña no coincide, agregar un mensaje de error a la variable $errores
-            $errores['passwdIncorrect'] = true;
+            // La contraseña no coincide
+            echo json_encode(["error" => "Passwordincorrect"]);
         }
     }
+} else {
+    // Redireccionar si no se reciben los datos esperados
+    echo json_encode(["error" => "Missing fields"]);
 }
-
-// Convertir los errores a JSON y enviarlos como respuesta
-// header('Content-Type: application/json');
-// echo json_encode($errores);
-exit();
 ?>

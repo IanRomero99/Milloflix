@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_user` (
   `pwd_user` VARCHAR(20) NULL,
   `id_rol` INT NULL,
   `id_like_user` INT NULL,
+  `id_estado` INT NULL,
   `correo_user` VARCHAR(100) NULL, -- Agregué el campo correo_user
   PRIMARY KEY (`id_user`),
   INDEX `id_rol_idx` (`id_rol` ASC) VISIBLE,

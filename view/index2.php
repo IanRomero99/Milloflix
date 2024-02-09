@@ -12,8 +12,7 @@
   <div class="nav" id="nav">
     
     <img src="../img/MILLOFLIX-31-1-2024.png" alt="" class="nav__logo">
-    <button id="registrar" class="botonLila" onclick='botonRegistrarFormulario();'>Registrar</button>
-    <button id="iniciar_sesion" class="botonLila" onclick='botonIniciarSesionFormulario();'>Iniciar Sesion</button>
+    <button id="iniciar_sesion" class="botonLila" onclick='botonCerrarSesion();'>Cerrar Sesion</button>
     <img src="../img/netflix-avatar.png" alt="" class="nav__avatar">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -162,64 +161,3 @@
       }
     })
   </script>
-</div>
-<div id="form_registrar" style="display: none" >
-
-  <div class="form-wrapper">
-    <h2>Registrar</h2>
-    <form action="" method="post" id="formulario_reg" onsubmit='validar_registrar();'>
-    <input type="hidden" name="id_rol" value="2">
-    <input type="hidden" name="id_estado" value="1">
-    <div class="form-control">
-        <input type="text" placeholder="Nombre..." id="username" name="username">
-        <!-- <label>Email or phone number</label> -->
-        <span id="error_nombre_reg"></span>
-      </div>
-      <div class="form-control">
-        <input type="text" placeholder="Correo electronico..." id="correo_reg" name="correo_reg">
-        <!-- <label>Email or phone number</label> -->
-        <span id="error_correo_reg"></span>
-      </div>
-      <div class="form-control">
-        <input type="password" placeholder="Contraseña..." id="pwd_reg" name="pwd_reg">
-        <!-- <label>Password</label> -->
-        <span id="error_pwd_reg"></span>
-      </div>
-      <button type="button" id="enviar_reg" name="enviar_reg" value="Enviar" onclick ='CrearUsuario();'>Enviar</button>
-      <!-- <button class="botonLila" onclick='botonSalir();'>Volver</button> -->
-      <div class="form-help">
-        </div>
-        <a>Need Help</a>
-      </div>
-    </form>
-    <button class="botonLila" onclick='botonSalir();'>Volver</button>
-    <p>New to Netflix? <a>Sign up now</a></p>
-    <small>This page is protected by Google reCAPTCHA to ensure you're not a bot <a>Learn more.</a></small>
-  </div>
-</div>
-
-<div id="form_iniciar_sesion" style="display: none">
-  <div class="form-wrapper">
-    <h2>Iniciar Sesión</h2>
-    <form action="" method="post" id="formulario_ini" onsubmit='validar_iniciar_sesion();'>
-      <div class="form-control">
-        <input type="text" placeholder="Correo..." id="correo_ini" name="correo_ini">
-        <!-- <label>Email or phone number</label> -->
-      </div>
-      <div class="form-control">
-        <input type="password" placeholder="Contraseña..." id="pwd_ini" name="pwd_ini">
-        <!-- <label>Password</label> -->
-      </div>
-      <button type="button" id="enviar_ini" name="enviar_ini" value="Enviar" onclick ='IniciarSesion();'>Enviar</button>
-      <div class="form-help">
-        <div class="remember-me">
-        </div>
-        <a>Need Help</a>
-      </div>
-    </form>
-    <button class="botonLila" onclick='botonSalir();'>Volver</button>
-    <p>New to Netflix? <a>Sign up now</a></p>
-    <small>This page is protected by Google reCAPTCHA to ensure you're not a bot <a>Learn more.</a></small>
-  </div>
-</div>
-<script src="./lpd.js"></script>

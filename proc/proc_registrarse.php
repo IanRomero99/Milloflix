@@ -7,7 +7,7 @@ $username = $_POST['username'];
 $correo_reg = $_POST['correo_reg'];
 $pwd_reg = $_POST['pwd_reg'];
 $id_rol = $_POST['id_rol'];
-
+$id_estado = $_POST['id_estado'];
 // Creamos una variable que pasará la contraseña sha256 lo que hará que se encripte
 $pwdEncriptada = hash("sha256", $pwd_reg);
 
@@ -49,13 +49,16 @@ if ($user_count > 0) {
     }
 } else {
     // El usuario no existe, procede con la inserción
-    $sql = "INSERT INTO tbl_user (`id_user`, `nombre_user`, `pwd_user`, `correo_user`, `id_rol`) VALUES (NULL, :username, :pwdEncriptada, :correo_reg, :id_rol)";
+    $sql = "INSERT INTO tbl_user (`id_user`, `nombre_user`, `pwd_user`, `correo_user`, `id_rol`, `id_estado` ) VALUES (NULL, :username, :pwdEncriptada, :correo_reg, :id_rol, :id_estado)";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':pwdEncriptada', $pwdEncriptada);
     $stmt->bindParam(':correo_reg', $correo_reg);
     $stmt->bindParam(':id_rol', $id_rol);
+    $stmt->bindParam(':id_estado', $id_estado);
     $stmt->execute();
+
+
     // Verifica si la inserción fue exitosa
     if ($stmt->rowCount() > 0) {
         // Envía la respuesta como JSON

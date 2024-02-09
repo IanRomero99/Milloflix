@@ -32,66 +32,66 @@ function botonSalir () {
 
 }
 
-function validar_registrar() {
-  // Validar usuario
-  var input_usuario = document.getElementById("username");
-  var error_usuario = document.getElementById("error_nombre_reg");
+// function validar_registrar() {
+//   // Validar usuario
+//   var input_usuario = document.getElementById("username");
+//   var error_usuario = document.getElementById("error_nombre_reg");
 
-  if (input_usuario.value.trim() === "" || /^\s+$/.test(input_usuario.value)) {
-      error_usuario.textContent = "El usuario está vacío";
-      error_usuario.style.color = "red";
-      input_usuario.style.border = "1px solid red";
-      return false;
-  } else {
-      input_usuario.style.border = "";
-      error_usuario.textContent = "";
-  }
+//   if (input_usuario.value.trim() === "" || /^\s+$/.test(input_usuario.value)) {
+//       error_usuario.textContent = "El usuario está vacío";
+//       error_usuario.style.color = "red";
+//       input_usuario.style.border = "1px solid red";
+//       return false;
+//   } else {
+//       input_usuario.style.border = "";
+//       error_usuario.textContent = "";
+//   }
 
-  var palabras = input_usuario.value.split(" ");
-  var palabrasValidas = 0;
+//   var palabras = input_usuario.value.split(" ");
+//   var palabrasValidas = 0;
 
-  for (var i = 0; i < palabras.length; i++) {
-      if (palabras[i].length >= 1) {
-          palabrasValidas++;
-      }
-  }
+//   for (var i = 0; i < palabras.length; i++) {
+//       if (palabras[i].length >= 1) {
+//           palabrasValidas++;
+//       }
+//   }
 
-  if (palabrasValidas !== 1) {
-      error_usuario.textContent = "El usuario solo debe tener una palabra";
-      error_usuario.style.color = "red";
-      input_usuario.style.border = "1px solid red";
-      return false;
-  } else {
-      error_usuario.textContent = "";
-  }
+//   if (palabrasValidas !== 1) {
+//       error_usuario.textContent = "El usuario solo debe tener una palabra";
+//       error_usuario.style.color = "red";
+//       input_usuario.style.border = "1px solid red";
+//       return false;
+//   } else {
+//       error_usuario.textContent = "";
+//   }
 
-  // Validar contraseña
-  var input_pwd = document.getElementById("pwd_reg");
-  var error_pwd = document.getElementById("error_pwd_reg");
+//   // Validar contraseña
+//   var input_pwd = document.getElementById("pwd_reg");
+//   var error_pwd = document.getElementById("error_pwd_reg");
 
-  if (input_pwd.value.trim() === "" || /^\s+$/.test(input_pwd.value)) {
-      error_pwd.textContent = "La contraseña está vacía";
-      error_pwd.style.color = "red";
-      input_pwd.style.border = "1px solid red";
-      return false;
-  } else {
-      input_pwd.style.border = "";
-      error_pwd.textContent = "";
-  }
+//   if (input_pwd.value.trim() === "" || /^\s+$/.test(input_pwd.value)) {
+//       error_pwd.textContent = "La contraseña está vacía";
+//       error_pwd.style.color = "red";
+//       input_pwd.style.border = "1px solid red";
+//       return false;
+//   } else {
+//       input_pwd.style.border = "";
+//       error_pwd.textContent = "";
+//   }
 
-  if (input_pwd.value.length < 9) {
-      error_pwd.textContent = "La contraseña no cumple los requisitos";
-      error_pwd.style.color = "red";
-      input_pwd.style.border = "1px solid red";
-      return false;
-  } else {
-      error_pwd.textContent = "";
-  }
+//   if (input_pwd.value.length < 9) {
+//       error_pwd.textContent = "La contraseña no cumple los requisitos";
+//       error_pwd.style.color = "red";
+//       input_pwd.style.border = "1px solid red";
+//       return false;
+//   } else {
+//       error_pwd.textContent = "";
+//   }
 
-  // Agrega aquí la validación del rol si es necesario
+//   // Agrega aquí la validación del rol si es necesario
 
-  return true;
-}
+//   return true;
+// }
 
 
 function CrearUsuario() {
@@ -105,9 +105,9 @@ function CrearUsuario() {
     if (ajax.readyState == 4) {
       // Verificamos el estado de la respuesta
       if (ajax.status == 200) {
-        console.log(ajax.responseText)
         var resultado = JSON.parse(ajax.responseText);
-        if (resultado == "ok") {
+        // Verificamos si la propiedad "message" del objeto JSON es "ok"
+        if (resultado.message == "ok") {
           Swal.fire({
             icon: 'success',
             title: 'Usuario creado',
@@ -137,7 +137,6 @@ function CrearUsuario() {
 
 
   
-
 function IniciarSesion() {
   var form_iniciar_sesion = document.getElementById("formulario_ini");
   var formdata = new FormData(form_iniciar_sesion);
@@ -150,24 +149,75 @@ function IniciarSesion() {
           // Verificamos el estado de la respuesta
           if (ajax.status == 200) {
               // Parseamos la respuesta JSON
-              var resultado = ajax.responseText;
-              console.log(resultado);
-              if (ajax.responseText == "ok") {
-                  Swal.fire({
-                      icon: 'success',
-                      title: 'Has iniciado sesión',
-                      showConfirmButton: false,
-                      timer: 1500
-                  });
+              var resultado = JSON.parse(ajax.responseText);
+              if (resultado.success) {
+                  if (resultado.role === 'cliente') {
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Has iniciado sesión como cliente',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      window.location.href = "../view/index2.php";
+                  } else if (resultado.role === 'admin') {
+                      Swal.fire({
+                          icon: 'success',
+                          title: 'Has iniciado sesión como administrador',
+                          showConfirmButton: false,
+                          timer: 1500
+                      });
+                      window.location.href = "../view/admin.php";
+                  }
                   // Resetear el formulario
                   form_iniciar_sesion.reset();
               } else {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error al iniciar sesión',
-                      showCancelButton: false,
-                      timer: 1500
-                  });
+                  // Manejar diferentes casos de error
+                  switch (resultado.error) {
+                      case "Noexiste":
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Usuario no encontrado',
+                              showCancelButton: false,
+                              timer: 1500
+                          });
+                          break;
+                      case "pendiente":
+                          Swal.fire({
+                              icon: 'warning',
+                              title: 'Tu cuenta está pendiente de aprobación',
+                              showCancelButton: false,
+                              timer: 1500
+                          });
+                          break;
+                      case "inactivo":
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Tu cuenta está inactiva',
+                              showCancelButton: false,
+                              timer: 1500
+                          });
+                          break;
+                      case "Passwordincorrect":
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Contraseña incorrecta',
+                              showCancelButton: false,
+                              timer: 1500
+                          });
+                          break;
+                      case "Missing fields":
+                          console.error("Campos faltantes en la solicitud");
+                          break;
+                      default:
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Error al iniciar sesión',
+                              text: resultado.error || 'Error desconocido',
+                              showCancelButton: false,
+                              timer: 1500
+                          });
+                          break;
+                  }
               }
           } else {
               console.error("Error en la solicitud AJAX: " + ajax.status);
@@ -180,80 +230,86 @@ function IniciarSesion() {
   ajax.send(formdata);
 }
 
-// // BUSCADOR DEL USUARIO 
-// document.addEventListener('DOMContentLoaded', function() {
-//   var buscar = document.getElementById("buscar");
 
-//   if (buscar) {
-//       buscar.addEventListener("keyup", function() {
-//           var valor = buscar.value;
-//           if (valor === "") {
-//               listarUsuarios('');
-//           } else {
-//               listarUsuarios(valor);
-//           }
-//       });
-//   } else {
-//       console.error('Elemento con ID "buscar" no encontrado');
-//   }
-// });
-// listarUsuarios(''); //listamos usuarios
+
+
+
+
+// BUSCADOR DEL USUARIO 
+document.addEventListener('DOMContentLoaded', function() {
+  var buscar = document.getElementById("buscar");
+
+  if (buscar) {
+      buscar.addEventListener("keyup", function() {
+          var valor = buscar.value;
+          if (valor === "") {
+              listarUsuarios('');
+          } else {
+              listarUsuarios(valor);
+          }
+      });
+  } else {
+      console.error('Elemento con ID "buscar" no encontrado');
+  }
+});
+listarUsuarios(''); //listamos usuarios
 
 // Listar usuarios
-// function listarUsuarios(valor) {
-//   var resultado = document.getElementById('resultado'); // Obtenemos el elemento con el id 'resultado' y lo guardamos en la variable resultado
+function listarUsuarios(valor) {
+  var resultado = document.getElementById('resultado'); // Obtenemos el elemento con el id 'resultado' y lo guardamos en la variable resultado
   
-//   // Creamos una nueva instancia de FormData y agregamos la clave 'busqueda' con el valor proporcionado
-//   var formdata = new FormData();
-//   formdata.append('busqueda', valor);
+  // Creamos una nueva instancia de FormData y agregamos la clave 'busqueda' con el valor proporcionado
+  var formdata = new FormData();
+  formdata.append('busqueda', valor);
   
-//   // Creamos un objeto XMLHttpRequest
-//   var ajax = new XMLHttpRequest();
+  // Creamos un objeto XMLHttpRequest
+  var ajax = new XMLHttpRequest();
   
-//   // Indicamos el método de envío y la URL del archivo PHP
-//   ajax.open('POST', '../proc/listar_usuarios.php');
+  // Indicamos el método de envío y la URL del archivo PHP
+  ajax.open('POST', '../proc/listar_usuarios.php');
 
-//   // Definimos la función que se ejecutará cuando la solicitud Ajax haya sido completada
-//   ajax.onload = function() {
-//       // Variable para construir la cadena de HTML
-//       var str = "";
+  // Definimos la función que se ejecutará cuando la solicitud Ajax haya sido completada
+  ajax.onload = function() {
+      // Variable para construir la cadena de HTML
+      var str = "";
 
-//       // Verificamos si la solicitud HTTP fue exitosa (código 200)
-//       if (ajax.status === 200) {
-//           // Parseamos la respuesta JSON del servidor
-//           var json = JSON.parse(ajax.responseText);
-//           // Variable para construir las filas de la tabla HTML
-//           var tabla = "";
+      // Verificamos si la solicitud HTTP fue exitosa (código 200)
+      if (ajax.status === 200) {
+          // Parseamos la respuesta JSON del servidor
+          var json = JSON.parse(ajax.responseText);
+          // Variable para construir las filas de la tabla HTML
+          var tabla = "";
 
-//           // Iteramos sobre cada elemento del array JSON
-//           json.forEach(function(item) {
-//               // Construimos una fila de la tabla con los datos del elemento actual
-//               str = "<tr><td>" + item.id_user + "</td>";
-//               str += "<td>" + item.nombre_user + "</td>";
-//               str += "<td>" + item.correo_user + "</td>";
-//               str += "<td>" + item.pwd_user + "</td>";
-//               str += "<td>" + item.nombre_rol + "</td>"; 
-//               // Agregamos esta línea para mostrar el tipo de rol
-//               str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_user + ")'>Editar</button>";
-//               str += "</td>";
-//               str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_user + ")'>Eliminar</button>";
-//               str += "</td>";
-//               str += "</tr>";
-//               tabla += str;
+          // Iteramos sobre cada elemento del array JSON
+          json.forEach(function(item) {
+              // Construimos una fila de la tabla con los datos del elemento actual
+              str = "<tr><td>" + item.id_user + "</td>";
+              str += "<td>" + item.nombre_user + "</td>";
+              str += "<td>" + item.correo_user + "</td>";
+              str += "<td>" + item.pwd_user + "</td>";
+              str += "<td>" + item.nombre_rol + "</td>"; 
+              str += "<td>" + item.nombre_estado + "</td>"; 
+              // Agregamos esta línea para mostrar el tipo de rol
+              str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_user + ")'>Editar</button>";
+              str += "</td>";
+              str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_user + ")'>Eliminar</button>";
+              str += "</td>";
+              str += "</tr>";
+              tabla += str;
               
-//           });
+          });
 
-//           // Insertamos la tabla construida en el elemento con id 'resultado'
-//           resultado.innerHTML = tabla;
-//       } else {
-//           // En caso de error, mostramos un mensaje de error en el elemento 'resultado'
-//           resultado.innerText = "Error en la solicitud Ajax";
-//       }
-//   };
+          // Insertamos la tabla construida en el elemento con id 'resultado'
+          resultado.innerHTML = tabla;
+      } else {
+          // En caso de error, mostramos un mensaje de error en el elemento 'resultado'
+          resultado.innerText = "Error en la solicitud Ajax";
+      }
+  };
 
-//   // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
-//   ajax.send(formdata);
-// }
+  // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+  ajax.send(formdata);
+}
 
 
 
