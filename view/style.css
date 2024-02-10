@@ -306,3 +306,68 @@ form .form-help :where(label, a){
 .form-wrapper a:hover {
     text-decoration: underline;
 }
+
+#buscar:hover {
+    border-color: #6c757d;
+}
+
+
+/* Estilo cuando el input de búsqueda está enfocado */
+
+#buscar:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
+}
+
+
+/* Estilo para el placeholder del input de búsqueda */
+
+#buscar::placeholder {
+    color: #868e96;
+}
+
+#editar {
+    background: #22f3e2;
+    padding: 13px 30px;
+    color: black;
+    font-family: oswald, sans-serif;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 1px;
+    min-width: 75px;
+    display: inline-block;
+    text-align: center;
+    font-weight: 400;
+    border-radius: 0;
+    border: 0;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    width: 75%;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+
+#eliminar {
+    background: #e00d0d;
+    padding: 13px 20px;
+    color: black;
+    font-family: oswald, sans-serif;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 24px;
+    letter-spacing: 1px;
+    min-width: 75px;
+    display: inline-block;
+    text-align: center;
+    font-weight: 400;
+    border-radius: 0;
+    border: 0;
+    transition-property: background-color;
+    transition-duration: 0.5s;
+    width: 75%;
+    cursor: pointer;
+    border-radius: 25px;
+}

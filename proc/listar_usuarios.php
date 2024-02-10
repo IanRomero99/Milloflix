@@ -26,18 +26,18 @@ if (!empty($_POST["busqueda"])) {
     $data = $_POST["busqueda"];
 
     // Consulta para obtener el usuario que se busca
-    $consulta = $pdo->prepare("SELECT u.id_user, u.nombre_user, u.correo_user, u.pwd_user, u.id_rol, r.nombre_rol, u.id_estado, e.nombre_estado
+    $consulta = $pdo->prepare("SELECT u.id_user, u.nombre_user, u.correo_user, u.pwd_user,  r.nombre_rol,  e.nombre_estado
                                FROM tbl_user u
                                JOIN tbl_rol r ON u.id_rol = r.id_rol
                                JOIN tbl_estado e ON u.id_estado = e.id_estado
-                               WHERE u.correo_user != :correo_ini AND (u.correo_user LIKE :data)");
+                               WHERE u.correo_user != :correo_ini AND u.correo_user LIKE :data");
     $consulta->bindParam(":correo_ini", $correo_ini);
     $data = "%" . $data . "%"; // Agregar comodines a la búsqueda
     $consulta->bindParam(":data", $data);
     $consulta->execute();
 } else {
     // Si está vacío, aparecerán todos los usuarios menos el que ha iniciado sesión
-    $consulta = $pdo->prepare("SELECT u.id_user, u.nombre_user, u.correo_user, u.pwd_user, u.id_rol, r.nombre_rol, u.id_estado, e.nombre_estado
+    $consulta = $pdo->prepare("SELECT u.id_user, u.nombre_user, u.correo_user, u.pwd_user, r.nombre_rol, e.nombre_estado
                                FROM tbl_user u
                                JOIN tbl_rol r ON u.id_rol = r.id_rol
                                JOIN tbl_estado e ON u.id_estado = e.id_estado

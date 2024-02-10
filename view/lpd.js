@@ -256,61 +256,64 @@ listarUsuarios(''); //listamos usuarios
 
 // Listar usuarios
 function listarUsuarios(valor) {
-  var resultado = document.getElementById('resultado'); // Obtenemos el elemento con el id 'resultado' y lo guardamos en la variable resultado
+    var resultado = document.getElementById('resultado'); // Obtenemos el elemento con el id 'resultado' y lo guardamos en la variable resultado
+    
+    // Creamos una nueva instancia de FormData y agregamos la clave 'busqueda' con el valor proporcionado
+    var formdata = new FormData();
+    formdata.append('busqueda', valor);
+    
+    // Creamos un objeto XMLHttpRequest
+    var ajax = new XMLHttpRequest();
+    
+    // Indicamos el método de envío y la URL del archivo PHP
+    ajax.open('POST', '../proc/listar_usuarios.php');
   
-  // Creamos una nueva instancia de FormData y agregamos la clave 'busqueda' con el valor proporcionado
-  var formdata = new FormData();
-  formdata.append('busqueda', valor);
+    // Definimos la función que se ejecutará cuando la solicitud Ajax haya sido completada
+    ajax.onload = function() {
+        // Variable para construir la cadena de HTML
+        var str = "";
   
-  // Creamos un objeto XMLHttpRequest
-  var ajax = new XMLHttpRequest();
+        // Verificamos si la solicitud HTTP fue exitosa (código 200)
+        if (ajax.status === 200) {
+            // Parseamos la respuesta JSON del servidor
+            // console.log(ajax.responseText);
+            var json = JSON.parse(ajax.responseText);
+            // Variable para construir las filas de la tabla HTML
+            var tabla = "";
   
-  // Indicamos el método de envío y la URL del archivo PHP
-  ajax.open('POST', '../proc/listar_usuarios.php');
-
-  // Definimos la función que se ejecutará cuando la solicitud Ajax haya sido completada
-  ajax.onload = function() {
-      // Variable para construir la cadena de HTML
-      var str = "";
-
-      // Verificamos si la solicitud HTTP fue exitosa (código 200)
-      if (ajax.status === 200) {
-          // Parseamos la respuesta JSON del servidor
-          var json = JSON.parse(ajax.responseText);
-          // Variable para construir las filas de la tabla HTML
-          var tabla = "";
-
-          // Iteramos sobre cada elemento del array JSON
-          json.forEach(function(item) {
-              // Construimos una fila de la tabla con los datos del elemento actual
-              str = "<tr><td>" + item.id_user + "</td>";
-              str += "<td>" + item.nombre_user + "</td>";
-              str += "<td>" + item.correo_user + "</td>";
-              str += "<td>" + item.pwd_user + "</td>";
-              str += "<td>" + item.nombre_rol + "</td>"; 
-              str += "<td>" + item.nombre_estado + "</td>"; 
-              // Agregamos esta línea para mostrar el tipo de rol
-              str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_user + ")'>Editar</button>";
-              str += "</td>";
-              str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_user + ")'>Eliminar</button>";
-              str += "</td>";
-              str += "</tr>";
-              tabla += str;
-              
-          });
-
-          // Insertamos la tabla construida en el elemento con id 'resultado'
-          resultado.innerHTML = tabla;
-      } else {
-          // En caso de error, mostramos un mensaje de error en el elemento 'resultado'
-          resultado.innerText = "Error en la solicitud Ajax";
-      }
-  };
-
-  // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
-  ajax.send(formdata);
-}
-
+            // Iteramos sobre cada elemento del array JSON
+            json.forEach(function(item) {
+                // Construimos una fila de la tabla con los datos del elemento actual
+                str = "<tr><td>" + item.id_user + "</td>";
+                str += "<td>" + item.nombre_user + "</td>";
+                str += "<td>" + item.correo_user + "</td>";
+                str += "<td>" + item.pwd_user + "</td>";
+                str += "<td>" + item.nombre_rol + "</td>"; 
+                str += "<td>" + item.nombre_estado + "</td>"; 
+                // Agregamos esta línea para mostrar el tipo de rol
+                str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_user + ")'>Editar</button>";
+                str += "</td>";
+                str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_user + ")'>Eliminar</button>";
+                str += "</td>";
+                str += "</tr>";
+                tabla += str;
+            });
+  
+            // Insertamos la tabla construida en el elemento con id 'resultado'
+            resultado.innerHTML = tabla;
+        } else {
+            // En caso de error, mostramos un mensaje de error en el elemento 'resultado'
+            resultado.innerText = "Error en la solicitud Ajax";
+        }
+    };
+  
+    // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+    ajax.send(formdata);
+  }
+  
+  // Llamamos a la función listarUsuarios con un valor vacío para cargar todos los usuarios al principio
+  listarUsuarios('');
+  
 
 
 

@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_user` (
 ) ENGINE = InnoDB;
 
 INSERT INTO `bd_milloflix`.`tbl_user` (`nombre_user`, `pwd_user`, `id_rol`, `id_like_user`, `correo_user`)
-VALUES ('Ian', SHA2('QWEqwe123', 256), 1, 101, 'ian@gmail.com');
+VALUES ('Ian', SHA2(' ', 256), 1, 101, 'ian@gmail.com');
 
 INSERT INTO `bd_milloflix`.`tbl_user` (`nombre_user`, `pwd_user`, `id_rol`, `id_like_user`, `correo_user`)
 VALUES ('Nil', SHA2('QWEqwe1234', 256), 1, 102, 'nil@gmail.com');
@@ -174,6 +174,22 @@ CREATE TABLE IF NOT EXISTS `bd_milloflix`.`tbl_peliculas` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+INSERT INTO `bd_milloflix`.`tbl_peliculas` (`desc_peli`, `caratula_peli`, `trailer_peli`, `id_ano_peli`, `id_pais`, `id_gen`, `id_dir`, `id_trabajo`) 
+VALUES ('Peli 1', '../img/large-movie1.jpg', 'trailer1.mp4', 2022, 1, 1, 1, 1);
+
+INSERT INTO `bd_milloflix`.`tbl_peliculas` (`desc_peli`, `caratula_peli`, `trailer_peli`, `id_ano_peli`, `id_pais`, `id_gen`, `id_dir`, `id_trabajo`) 
+VALUES ('Peli 2', '../img/large-movie2.jpg', 'trailer2.mp4', 2023, 2, 2, 2, 2);
+
+INSERT INTO `bd_milloflix`.`tbl_peliculas` (`desc_peli`, `caratula_peli`, `trailer_peli`, `id_ano_peli`, `id_pais`, `id_gen`, `id_dir`, `id_trabajo`) 
+VALUES ('Peli 3', '../img/large-movie3.jpg', 'trailer3.mp4', 2021, 3, 3, 3, 3);
+
+INSERT INTO `bd_milloflix`.`tbl_peliculas` (`desc_peli`, `caratula_peli`, `trailer_peli`, `id_ano_peli`, `id_pais`, `id_gen`, `id_dir`, `id_trabajo`) 
+VALUES ('Peli 4', '../img/large-movie4.jpg', 'trailer4.mp4', 2024, 4, 4, 4, 4);
+
+INSERT INTO `bd_milloflix`.`tbl_peliculas` (`desc_peli`, `caratula_peli`, `trailer_peli`, `id_ano_peli`, `id_pais`, `id_gen`, `id_dir`, `id_trabajo`) 
+VALUES ('Peli 5', '../img/large-movie5.jpg', 'trailer5.mp4', 2020, 5, 5, 5, 5);
+
 
 
 -- -----------------------------------------------------

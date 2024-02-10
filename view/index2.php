@@ -33,15 +33,24 @@
 
     </div>
   </div>
+
+
+  <form action="" method="post" id="frmbusqueda">
+        <div class="form-group">
+            <br>
+            <input type="text" name="buscar_pelis" id="buscar_pelis" placeholder="Buscar..." class="form-control">
+        </div>
+    </form>
+
 <!-- Milloflix TOP 5 -->
   <div class="row">
     <h2>MILLOFLIX TOP 5</h2>
-    <div class="row__posters">
-      <img src="../img/large-movie1.jpg" alt="" class="row__poster row__posterLarge">
+    <div id="pelis" class="row__posters">
+      <!-- <img src="../img/large-movie1.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/large-movie2.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/large-movie3.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/large-movie4.jpg" alt="" class="row__poster row__posterLarge">
-      <img src="../img/large-movie5.jpg" alt="" class="row__poster row__posterLarge">
+      <img src="../img/large-movie5.jpg" alt="" class="row__poster row__posterLarge"> -->
     </div>
   </div>
 
@@ -49,14 +58,14 @@
   <div class="row">
     <h2>MILLOFLIX TRENDING NOW</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie1.jpg" alt="" class="row__poster row__posterLarge" >
+      <img src="../img/small-movie2.jpg" alt=""  class="row__poster row__posterLarge">
+      <img src="../img/small-movie3.jpg" alt="" class="row__poster row__posterLarge">
+      <img src="../img/small-movie4.jpg" alt="" class="row__poster row__posterLarge">
+      <img src="../img/small-movie5.jpg" alt="" class="row__poster row__posterLarge">
+      <!-- <img src="../img/small-movie6.jpg" alt="" class="row__poster row__posterLarge">
+      <img src="../img/small-movie7.jpg" alt="" class="row__poster row__posterLarge">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster row__posterLarge"> -->
     </div>
   </div>
 
@@ -161,3 +170,4 @@
       }
     })
   </script>
+  <script src="./index.js"></script>
