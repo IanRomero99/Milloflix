@@ -32,6 +32,24 @@ function botonSalir () {
 
 }
 
+function botonCrearPelis () {
+    // Oculta el contenedor principal de películas
+    document.getElementById('mostrar_pelis').style.display = 'none';
+
+    // Oculta el formulario de búsqueda
+    document.getElementById('frmbusqueda').style.display = 'none';
+
+    // Oculta el resultado de la búsqueda
+    document.getElementById('resultado').style.display = 'none';
+  
+    // Oculta el contenedor de películas
+    document.getElementById('resultado_peliculas').style.display = 'none';
+
+    // Muestra el formulario de creación de películas
+    document.getElementById('form__crear').style.display = 'block';
+}
+
+
 // function validar_registrar() {
 //   // Validar usuario
 //   var input_usuario = document.getElementById("username");
@@ -250,9 +268,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   } else {
       console.error('Elemento con ID "buscar" no encontrado');
+      listarUsuarios(''); //listamos usuarios
   }
 });
-listarUsuarios(''); //listamos usuarios
+
 
 // Listar usuarios
 function listarUsuarios(valor) {
@@ -291,9 +310,7 @@ function listarUsuarios(valor) {
                 str += "<td>" + item.nombre_rol + "</td>"; 
                 str += "<td>" + item.nombre_estado + "</td>"; 
                 // Agregamos esta línea para mostrar el tipo de rol
-                str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_user + ")'>Editar</button>";
-                str += "</td>";
-                str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_user + ")'>Eliminar</button>";
+                str += "<td><button type='button' id='editar' onclick='BotonCambiar_estado(" + item.id_user + ")'>Cambiar estado</button>";
                 str += "</td>";
                 str += "</tr>";
                 tabla += str;
@@ -311,11 +328,335 @@ function listarUsuarios(valor) {
     ajax.send(formdata);
   }
   
-  // Llamamos a la función listarUsuarios con un valor vacío para cargar todos los usuarios al principio
-  listarUsuarios('');
+ 
   
+  function BotonCambiar_estado(id_user) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí",
+        cancelButtonText: "No"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Creamos una nueva instancia de FormData
+            var formdata = new FormData();
+            // Agregamos el ID del usuario al objeto FormData
+            formdata.append('id_user', id_user);
+            // Creamos un objeto XMLHttpRequest
+            var ajax = new XMLHttpRequest();
+            // Definimos el método, la URL y si es asíncrono
+            ajax.open('POST', '../proc/cambiar_estado.php', true);
+
+            ajax.onload = function() {
+                if (ajax.status === 200) { // Si la solicitud es exitosa
+                    // console.log(ajax.responseText)
+                    if (ajax.responseText === "ok") { // Si la respuesta es "ok"
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Se ha cambiado el estado correctamente!',
+                            showCancelButton: false,
+                            timer: 1500
+                        });
+                        // Aquí podrías llamar a la función para listar los usuarios nuevamente
+                        // listarUsuarios(valor);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al cambiar el estado',
+                            showCancelButton: false,
+                            timer: 1500
+                        });
+                    }
+                }
+            }
+            ajax.send(formdata); // Envía la solicitud HTTP al servidor con los datos en 'formdata'
+        }
+    })
+}
+setInterval(function() {
+    // Obtener el valor actual del campo de búsqueda
+    var valor = buscar.value;
+
+    // Llamar a la función para listar usuarios con el valor actual
+    listarUsuarios(valor);
+    // CrudPelis(valor_peli);
+}, 1000); 
 
 
+
+
+  // BUSCADOR DE PELICULAS
+  document.addEventListener('DOMContentLoaded', function() {
+    var buscar_pelis = document.getElementById("buscar_peliculas");
+  
+    if (buscar_pelis) {
+        buscar_pelis.addEventListener("keyup", function() {
+            var valor_peli = buscar_pelis.value; // Usar buscar_pelis.value en lugar de buscar.value
+            if (valor_peli === "") {
+                CrudPelis('');
+            } else {
+                CrudPelis(valor_peli);
+            }
+        });
+    } else {
+        console.error('Elemento con ID "buscar" no encontrado');
+    }
+});
+
+  CrudPelis(''); //listamos usuarios
+  
+  // Listar usuarios
+  function CrudPelis(valor_peli) {
+      var resultado = document.getElementById('resultado_peliculas'); // Obtenemos el elemento con el id 'resultado' y lo guardamos en la variable resultado
+      
+      // Creamos una nueva instancia de FormData y agregamos la clave 'busqueda' con el valor proporcionado
+      var formdata = new FormData();
+      formdata.append('busqueda', valor_peli);
+      
+      // Creamos un objeto XMLHttpRequest
+      var ajax = new XMLHttpRequest();
+      
+      // Indicamos el método de envío y la URL del archivo PHP
+      ajax.open('POST', '../proc/listar_pelis.php');
+    
+      // Definimos la función que se ejecutará cuando la solicitud Ajax haya sido completada
+      ajax.onload = function() {
+          // Variable para construir la cadena de HTML
+          var str = "";
+    
+          // Verificamos si la solicitud HTTP fue exitosa (código 200)
+          if (ajax.status === 200) {
+              // Parseamos la respuesta JSON del servidor
+              // console.log(ajax.responseText);
+              var json = JSON.parse(ajax.responseText);
+              // Variable para construir las filas de la tabla HTML
+              var tabla = "";
+    
+              // Iteramos sobre cada elemento del array JSON
+              json.forEach(function(item) {
+                  // Construimos una fila de la tabla con los datos del elemento actual
+                  str = "<tr><td>" + item.id_peli + "</td>";
+                  str += "<td>" + item.desc_peli + "</td>";
+                //   str += "<td>" + item.caratula_peli + "</td>";
+                str += '<td><img src="' + item.caratula_peli + '" alt="Imagen de la Película" class="img_crud"></td>';
+                  str += "<td>" + item.trailer_peli + "</td>";
+                  str += "<td>" + item.ano + "</td>"; 
+                  str += "<td>" + item.nombre_pais + "</td>"; 
+                  str += "<td>" + item.nombre_gen + "</td>"; 
+                //   str += "<td>" + item.nombre_pers + "</td>"; 
+                  // Agregamos esta línea para mostrar el tipo de rol
+                  str += "<td><button type='button' id='editar' onclick='BotonEditar(" + item.id_peli + ")'>Editar</button>";
+                  str += "</td>";
+                  str += "<td><button type='button' id='eliminar' onclick='BotonEliminar(" + item.id_peli + ")'>Eliminar</button>";
+                  str += "</td>";
+                  str += "</tr>";
+                  tabla += str;
+              });
+    
+              // Insertamos la tabla construida en el elemento con id 'resultado'
+              resultado.innerHTML = tabla;
+          } else {
+              // En caso de error, mostramos un mensaje de error en el elemento 'resultado'
+              resultado.innerText = "Error en la solicitud Ajax";
+          }
+      };
+    
+      // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+      ajax.send(formdata);
+    }
+    
+    // Llamamos a la función listarUsuarios con un valor vacío para cargar todos los usuarios al principio
+    CrudPelis('');
+    
+    function CrearPeli(id_peli) {
+        // Obtenemos el elemento con el id "form_crear"
+        var crear = document.getElementById("form__crear");
+    
+    
+        if (crear.style.display === "block") {
+            // Si es "block", cambia a "none" para ocultar el formulario
+            crear.style.display = "none";
+        } else {
+            // Si no es "block", cambia a "block" para mostrar el formulario
+            crear.style.display = "block";
+        }
+        // Creamos una nueva instancia de FormData
+        var formdata = new FormData(crear);
+    
+        // Agregamos nueva clave y valor al objeto FormData
+        formdata.append('id_peli', id_peli);
+    
+        // Creamos el objeto XMLHttpRequest
+        var ajax = new XMLHttpRequest();
+    
+        // Definimos método, URL y que sea asíncrono
+        ajax.open('POST', '../proc/crear_pelis.php', true);
+    
+        // Definimos la función que se ejecutará cuando la solicitud AJAX sea completada
+        ajax.onload = function() {
+            // Variable para construir las filas de la tabla HTM
+    
+            // Verificamos si la solicitud fue exitosa (código de estado 200)
+            if (ajax.status === 200) {
+                if (ajax.responseText == "ok") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Pelicula añadida',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    // Resetear el formulario
+                    crear.reset();
+                    // Refrescar el listado de registros y eliminar filtros que haya activos
+                    CrudPelis('');
+                    
+                }else{
+                    console.log("ERROR");
+                }
+            }
+                    
+    
+        };
+    
+        // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+        ajax.send(formdata);
+    }
+    
+
+
+// Recoger los roles
+// Creacion de la funcion 
+
+function recogerAno() {
+    // Cogemos el elemento select donde se mostrarán los años
+    var selectAno = document.getElementById("ano_crear");
+
+    // Creamos una solicitud de Ajax
+    var ajax = new XMLHttpRequest();
+
+    // Definimos la función que manejará la respuesta de la solicitud Ajax
+    ajax.onreadystatechange = function() {
+        // Si la solicitud se ha completado y la respuesta está lista
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            // Parseamos la respuesta JSON
+            // console.log(ajax.responseText)
+            var respuestaAno = ajax.responseText;
+            // console.log(respuestaAno)
+            try {
+                // Convertimos la respuesta JSON a un array de objetos
+                var anosJSON = JSON.parse(respuestaAno);
+                console.log(anosJSON)
+                // Limpiamos el select de años
+                selectAno.innerHTML = "";
+                
+                // Recorremos los años y los añadimos al select
+                for (var i = 0; i < anosJSON.length; i++) {
+                    selectAno.innerHTML += "<option value='" + anosJSON[i].ano + "'>" + anosJSON[i].ano + "</option>";
+                }
+            } catch (e) {
+                console.error("Error al parsear la respuesta JSON.");
+            }
+        }
+    };
+
+    // Configuramos la solicitud Ajax
+    ajax.open("POST", "../proc/ano.php", true);
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send();
+}
+
+// Llamamos a la función para que se ejecute al cargar la página
+recogerAno();
+
+
+
+function recogerPais() {
+    // Cogemos el elemento select donde se mostrarán los países
+    var selectPais = document.getElementById("pais_crear");
+
+    // Creamos una solicitud de Ajax
+    var ajax = new XMLHttpRequest();
+
+    // Definimos la función que manejará la respuesta de la solicitud Ajax
+    ajax.onreadystatechange = function() {
+        // Si la solicitud se ha completado y la respuesta está lista
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            // Parseamos la respuesta JSON
+            // console.log(ajax.responseText)
+            var respuestaPais = ajax.responseText;
+            
+            try {
+                // Convertimos la respuesta JSON a un array de objetos
+                var paisJSON = JSON.parse(respuestaPais);
+                console.log(paisJSON)
+                // Limpiamos el select de países
+                selectPais.innerHTML = "";
+                
+                // Recorremos los países y los añadimos al select
+                for (var i = 0; i < paisJSON.length; i++) {
+                    selectPais.innerHTML += "<option value='" + paisJSON[i].nombre_pais + "</option>";
+                }
+            } catch (e) {
+                console.error("Error al parsear la respuesta JSON.");
+            }
+        }
+    };
+
+    // Configuramos la solicitud Ajax
+    ajax.open("POST", "../proc/pais.php", true);
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send();
+}
+
+// Llamamos a la función para que se ejecute al cargar la página
+recogerPais();
+
+
+
+function recogerGenero() {
+    // Cogemos el elemento select donde se mostrarán los países
+    var selectGenero = document.getElementById("genero_crear");
+
+    // Creamos una solicitud de Ajax
+    var ajax = new XMLHttpRequest();
+
+    // Definimos la función que manejará la respuesta de la solicitud Ajax
+    ajax.onreadystatechange = function() {
+        // Si la solicitud se ha completado y la respuesta está lista
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            // Parseamos la respuesta JSON
+            // console.log(ajax.responseText)
+            var respuestaGenero = ajax.responseText;
+            console.log(respuestaGenero)
+            
+            try {
+                // Convertimos la respuesta JSON a un array de objetos
+                var generoJSON = JSON.parse(respuestaGenero);
+                // console.log(respuestaAno)
+                // Limpiamos el select de países
+                selectGenero.innerHTML = "";
+                
+                // Recorremos los países y los añadimos al select
+                for (var i = 0; i < generoJSON.length; i++) {
+                    selectGenero.innerHTML += "<option value='" + paisJSON[i].nombre_gen + "'>" + paisJSON[i].nombre_gen + "</option>";
+                }
+            } catch (e) {
+                console.error("Error al parsear la respuesta JSON.");
+            }
+        }
+    };
+
+    // Configuramos la solicitud Ajax
+    ajax.open("POST", "../proc/genero.php", true);
+    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajax.send();
+}
+
+// Llamamos a la función para que se ejecute al cargar la página
+recogerGenero();
 
 // function validar_registrar () {
 

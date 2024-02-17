@@ -371,3 +371,8 @@ form .form-help :where(label, a){
     cursor: pointer;
     border-radius: 25px;
 }
+
+.img_crud {
+    max-width: 100px; /* Ajusta el ancho máximo según sea necesario */
+    max-height: 100px; /* Ajusta la altura máxima según sea necesario */
+}

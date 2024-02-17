@@ -15,7 +15,6 @@
     <button id="iniciar_sesion" class="botonLila" onclick='botonCerrarSesion();'>Cerrar Sesion</button>
     <img src="../img/netflix-avatar.png" alt="" class="nav__avatar">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
   </div>
   <!-- header -->
   <div class="banner">
@@ -51,18 +50,20 @@
       <img src="../img/large-movie3.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/large-movie4.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/large-movie5.jpg" alt="" class="row__poster row__posterLarge"> -->
+      
     </div>
-  </div>
-
+</div>
+  <div id="dato_peli" >
+</div>
   <!-- Trending Now -->
   <div class="row">
     <h2>MILLOFLIX TRENDING NOW</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster row__posterLarge" >
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster row__posterLarge" >
       <img src="../img/small-movie2.jpg" alt=""  class="row__poster row__posterLarge">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster row__posterLarge">
-      <img src="../img/small-movie5.jpg" alt="" class="row__poster row__posterLarge">
+      <img src="../img/small-movie5.jpg" alt="" class="row__poster row__posterLarge"> -->
       <!-- <img src="../img/small-movie6.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster row__posterLarge">
       <img src="../img/small-movie8.jpg" alt="" class="row__poster row__posterLarge"> -->
@@ -73,14 +74,14 @@
   <div class="row">
     <h2>Top rated</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster "> -->
     </div>
   </div>
 
@@ -88,14 +89,14 @@
   <div class="row">
     <h2>Action Movies</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster "> -->
     </div>
   </div>
 
@@ -104,14 +105,14 @@
   <div class="row">
     <h2>Comedy Movies</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster "> -->
     </div>
   </div>
 
@@ -119,14 +120,14 @@
   <div class="row">
     <h2>Horror Movies</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster "> -->
     </div>
   </div>
 
@@ -134,14 +135,14 @@
   <div class="row">
     <h2>Romance Movies</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster "> -->
     </div>
   </div>
 
@@ -149,14 +150,14 @@
   <div class="row">
     <h2>Documentaries</h2>
     <div class="row__posters">
-      <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
+      <!-- <img src="../img/small-movie1.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie2.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie3.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie4.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie5.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie6.jpg" alt="" class="row__poster ">
       <img src="../img/small-movie7.jpg" alt="" class="row__poster ">
-      <img src="../img/small-movie8.jpg" alt="" class="row__poster ">
+      <img src="../img/small-movie8.jpg" alt="" class="row__poster "> -->
     </div>
   </div>
   <script>
