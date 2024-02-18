@@ -15,7 +15,7 @@ $correo_ini = $_SESSION['admin'];
 require_once("./conexion.php"); // Conexión a la base de datos
 
 // Obtén el ID del rol utilizando el tipo de rol
-$sql_get_pais = "SELECT nombre_pais FROM tbl_pais"; // Modificado para seleccionar id_ano_peli además de ano
+$sql_get_pais = "SELECT * FROM tbl_pais"; // Modificado para seleccionar id_ano_peli además de ano
 $stmt_get_pais = $pdo->prepare($sql_get_pais);
 $stmt_get_pais->execute();
 $resultado = $stmt_get_pais->fetchAll(PDO::FETCH_ASSOC);

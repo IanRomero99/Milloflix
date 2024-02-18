@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,14 +12,7 @@
     
 </body>
 </html>
-<?php
-// Inicializamos la sesión
-// session_start();
 
-// // Si existe creada la variable de sesión "username" le permitirá pasar al listado
-// if ($_SESSION['usuario']) {
-
-?>
 
     <header>
         <button id="cerrarSesionBtn" class="botonLila" onclick='cerrarSesion();'>Cerrar Sesión</button>
@@ -83,11 +77,10 @@
                                 <th>id_peli</th>
                                 <th>Descripción</th>
                                 <th>Caratula</th>
-                                <th>Trailer</th>
                                 <th>Año</th>
                                 <th>Pais</th>
                                 <th>Genero</th>
-                                <th>Personal</th>  
+                                <!-- <th>Personal</th>   -->
                                 <th>Editar</th>
                                 <th>Eliminar</th>                
                                
@@ -125,26 +118,12 @@
             <!-- Creamos el label para la contraseña con su input de texto -->
             <div class="input_box">
             <label for="file">Seleccionar fichero caratula:</label>
-         <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
- 
-         <input type="file" name="file" id="caratula_peli">
-         <input type="submit" value="Subir">
+         <input type="file" name="caratula_peli" id="caratula_peli">
+        
                 <!-- El span servirá para que salten los errores de javascript -->
                 <!-- <span id="error_contrasena"></span> -->
             </div>
 
-
-
-            <!-- Creamos el label para la contraseña con su input de texto -->
-            <div class="input_box">
-            <label for="file">Seleccionar fichero trailer:</label>
-         <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
- 
-         <input type="file" name="file" id="trailer_peli">
-         <input type="submit" value="Subir">
-                <!-- El span servirá para que salten los errores de javascript -->
-                <!-- <span id="error_contrasena"></span> -->
-            </div>
 
 
             <div class="input_box">
@@ -172,8 +151,8 @@
 
     
 <div class="input_box">
-    <label for="genero_crear">Genero:</label>
-    <select id="genero_crear" name="genero_crear">
+    <label for="gen_crear">Genero:</label>
+    <select id="gen_crear" name="gen_crear">
         <!-- Las opciones se llenarán dinámicamente desde la base de datos -->
     </select>
     <div class="icon"><i class="fas fa-lock"></i></div>
@@ -182,3 +161,77 @@
     <!-- <span id="error_rol"></span> -->
 </div>
 <input type="button" id="enviar_crear" name="enviar" value="Enviar" onclick="CrearPeli();">
+
+</form>
+
+
+
+<form id="form_editar"  onsubmit="return validar();">
+            <div style="padding: 10px;">
+            <div class="main_div">
+            <div class="title">Editar</div>
+            <!-- <img src='./src/LOGO3.png' alt="Imagen de Github"> -->
+            <!-- Creamos el label para el usuario con su input de texto -->
+            <div class="input_box">
+            <input type="hidden" id="id_peli" name="id_peli">
+                <label for="desc_editar">Descripción:</label>
+                <input type="text" id="desc_editar" name="desc_editar" placeholder="Descripcion...">
+                <div class="icon"><i class="fas fa-user"></i></div>
+                <br>
+                <!-- El span servirá para que salten los errores de javascript -->
+                <span id="error_usuario"></span>
+            </div>
+        
+            <br>
+
+
+            <br>
+
+            <!-- Creamos el label para la contraseña con su input de texto -->
+            <div class="input_box">
+            <label for="file">Seleccionar fichero caratula:</label>
+         <input type="file" name="caratula_peli" id="caratula_peli">
+        
+                <!-- El span servirá para que salten los errores de javascript -->
+                <!-- <span id="error_contrasena"></span> -->
+            </div>
+
+
+
+            <div class="input_box">
+    <label for="ano_editar">Año:</label>
+    <select id="ano_editar" name="ano_editar">
+        <!-- Las opciones se llenarán dinámicamente desde la base de datos -->
+    </select>
+    <div class="icon"><i class="fas fa-lock"></i></div>
+    <br>
+    <!-- El span servirá para que salten los errores de javascript -->
+    <!-- <span id="error_rol"></span> -->
+</div>
+
+    
+<div class="input_box">
+    <label for="pais_editar">Pais:</label>
+    <select id="pais_editar" name="pais_editar">
+        <!-- Las opciones se llenarán dinámicamente desde la base de datos -->
+    </select>
+    <div class="icon"><i class="fas fa-lock"></i></div>
+    <br>
+    <!-- El span servirá para que salten los errores de javascript -->
+    <!-- <span id="error_rol"></span> -->
+</div>
+
+    
+<div class="input_box">
+    <label for="gen_editar">Genero:</label>
+    <select id="gen_editar" name="gen_editar">
+        <!-- Las opciones se llenarán dinámicamente desde la base de datos -->
+    </select>
+    <div class="icon"><i class="fas fa-lock"></i></div>
+    <br>
+    <!-- El span servirá para que salten los errores de javascript -->
+    <!-- <span id="error_rol"></span> -->
+</div>
+<input type="button" id="enviar_editar" name="enviar" value="Enviar" onclick="EditarPeli();">
+
+</form>

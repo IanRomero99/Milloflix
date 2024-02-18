@@ -15,7 +15,7 @@ $correo_ini = $_SESSION['admin'];
 require_once("./conexion.php"); // Conexión a la base de datos
 
 // Obtén el ID del rol utilizando el tipo de rol
-$sql_get_genero = "SELECT nombre_gen FROM tbl_genero"; // Modificado para seleccionar id_ano_peli además de ano
+$sql_get_genero = "SELECT * FROM tbl_genero"; // Modificado para seleccionar id_ano_peli además de ano
 $stmt_get_genero = $pdo->prepare($sql_get_genero);
 $stmt_get_genero->execute();
 $resultado = $stmt_get_genero->fetchAll(PDO::FETCH_ASSOC);

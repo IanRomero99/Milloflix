@@ -1,3 +1,17 @@
+
+<?php
+// Inicializamos la sesión
+session_start();
+
+// // Si existe creada la variable de sesión "username" le permitirá pasar al listado
+if ($_SESSION['cliente']) {
+
+?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -172,3 +186,8 @@
     })
   </script>
   <script src="./index.js"></script>
+<?php
+} else {
+  header('Location: ../index.php');
+  exit(); 
+}

@@ -20,7 +20,7 @@ if (!empty($_POST["busqueda"])) {
     $data = $_POST["busqueda"];
 
     // Consulta para obtener las películas que se buscan
-    $consulta = $pdo->prepare("SELECT p.id_peli, p.desc_peli, p.caratula_peli, p.trailer_peli, a.ano, pa.nombre_pais, g.nombre_gen
+    $consulta = $pdo->prepare("SELECT p.id_peli, p.desc_peli, p.caratula_peli, a.ano, pa.nombre_pais, g.nombre_gen
                                FROM tbl_peliculas p
                                JOIN tbl_ano a ON p.id_ano_peli = a.id_ano_peli
                                JOIN tbl_pais pa ON p.id_pais = pa.id_pais
@@ -31,7 +31,7 @@ if (!empty($_POST["busqueda"])) {
     $consulta->execute();
 } else {
     // Si está vacío, aparecerán todas las películas
-    $consulta = $pdo->prepare("SELECT p.id_peli, p.desc_peli, p.caratula_peli, p.trailer_peli, a.ano, pa.nombre_pais, g.nombre_gen
+    $consulta = $pdo->prepare("SELECT p.id_peli, p.desc_peli, p.caratula_peli, a.ano, pa.nombre_pais, g.nombre_gen
                                FROM tbl_peliculas p
                                JOIN tbl_ano a ON p.id_ano_peli = a.id_ano_peli
                                JOIN tbl_pais pa ON p.id_pais = pa.id_pais

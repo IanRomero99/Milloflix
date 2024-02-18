@@ -10,7 +10,7 @@ if(isset($_SESSION['cliente'])) {
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
-            $sql_id_user = "SELECT id_user FROM tbl_user WHERE id_user = :cliente";
+            $sql_id_user = "SELECT id_user FROM tbl_user WHERE correo_user = :cliente";
             $stmt_id_user = $pdo->prepare($sql_id_user);
             $stmt_id_user->bindParam(':cliente', $username, PDO::PARAM_INT);
             $stmt_id_user->execute();

@@ -8,7 +8,7 @@ if(isset($_POST['id_peli'])) {
 
 
     // Preparar la consulta SQL para obtener los datos de la película específica
-    $consulta = $pdo->prepare("SELECT p.id_peli, p.desc_peli, p.caratula_peli, p.trailer_peli, a.ano, pa.nombre_pais, g.nombre_gen
+    $consulta = $pdo->prepare("SELECT p.id_peli, p.desc_peli, p.caratula_peli, a.ano, pa.nombre_pais, g.nombre_gen
                                 FROM tbl_peliculas p
                                 JOIN tbl_ano a ON p.id_ano_peli = a.id_ano_peli
                                 JOIN tbl_pais pa ON p.id_pais = pa.id_pais

@@ -442,7 +442,6 @@ setInterval(function() {
                   str += "<td>" + item.desc_peli + "</td>";
                 //   str += "<td>" + item.caratula_peli + "</td>";
                 str += '<td><img src="' + item.caratula_peli + '" alt="Imagen de la Película" class="img_crud"></td>';
-                  str += "<td>" + item.trailer_peli + "</td>";
                   str += "<td>" + item.ano + "</td>"; 
                   str += "<td>" + item.nombre_pais + "</td>"; 
                   str += "<td>" + item.nombre_gen + "</td>"; 
@@ -476,13 +475,14 @@ setInterval(function() {
         var crear = document.getElementById("form__crear");
     
     
-        if (crear.style.display === "block") {
-            // Si es "block", cambia a "none" para ocultar el formulario
-            crear.style.display = "none";
-        } else {
-            // Si no es "block", cambia a "block" para mostrar el formulario
-            crear.style.display = "block";
-        }
+
+        // if (crear.style.display === "block") {
+        //     // Si es "block", cambia a "none" para ocultar el formulario
+        //     crear.style.display = "none";
+        // } else {
+        //     // Si no es "block", cambia a "block" para mostrar el formulario
+        //     crear.style.display = "block";
+        // }
         // Creamos una nueva instancia de FormData
         var formdata = new FormData(crear);
     
@@ -501,7 +501,8 @@ setInterval(function() {
     
             // Verificamos si la solicitud fue exitosa (código de estado 200)
             if (ajax.status === 200) {
-                if (ajax.responseText == "ok") {
+                console.log(ajax.responseText)
+                if (ajax.responseText === "ok") {
                     Swal.fire({
                         icon: 'success',
                         title: 'Pelicula añadida',
@@ -514,7 +515,12 @@ setInterval(function() {
                     CrudPelis('');
                     
                 }else{
-                    console.log("ERROR");
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error al crear la película',
+                    showCancelButton: false,
+                    timer: 1500
+                });
                 }
             }
                     
@@ -531,40 +537,47 @@ setInterval(function() {
 // Creacion de la funcion 
 
 function recogerAno() {
-    // Cogemos el elemento select donde se mostrarán los años
-    var selectAno = document.getElementById("ano_crear");
-
-    // Creamos una solicitud de Ajax
     var ajax = new XMLHttpRequest();
 
-    // Definimos la función que manejará la respuesta de la solicitud Ajax
     ajax.onreadystatechange = function() {
-        // Si la solicitud se ha completado y la respuesta está lista
-        if (ajax.readyState === 4 && ajax.status === 200) {
-            // Parseamos la respuesta JSON
-            // console.log(ajax.responseText)
-            var respuestaAno = ajax.responseText;
-            // console.log(respuestaAno)
-            try {
-                // Convertimos la respuesta JSON a un array de objetos
-                var anosJSON = JSON.parse(respuestaAno);
-                console.log(anosJSON)
-                // Limpiamos el select de años
-                selectAno.innerHTML = "";
-                
-                // Recorremos los años y los añadimos al select
-                for (var i = 0; i < anosJSON.length; i++) {
-                    selectAno.innerHTML += "<option value='" + anosJSON[i].ano + "'>" + anosJSON[i].ano + "</option>";
+        if (ajax.readyState == 4) {
+            if (ajax.status == 200) {
+                try {
+                    var respuestaAño = JSON.parse(ajax.responseText); // Convertir la respuesta a un objeto JavaScript
+                    var selectAño = document.getElementById("ano_crear");
+
+                    // Limpiar opciones existentes
+                    selectAño.innerHTML = "";
+
+                    // Agregar la opción predeterminada
+                    var opciones = document.createElement("option");
+                    opciones.value = "";
+                    opciones.text = "Seleccionar una opción";
+                    selectAño.appendChild(opciones);
+
+                    // Verificar si la respuesta está en el formato esperado
+                    if (Array.isArray(respuestaAño)) {
+                        // Agregar nuevas opciones
+                        respuestaAño.forEach(function(año) {
+                            var option = document.createElement("option");
+                            option.value = año.id_ano_peli;
+                            option.text = año.ano;
+                            selectAño.appendChild(option);
+                        });
+                    } else {
+                        console.error("La respuesta no es un array:", respuestaAño);
+                    }
+                } catch (e) {
+                    console.error("Error al procesar la respuesta JSON: ", e);
                 }
-            } catch (e) {
-                console.error("Error al parsear la respuesta JSON.");
+            } else {
+                console.error("Error en la solicitud AJAX. Estado: " + ajax.status);
             }
         }
     };
 
-    // Configuramos la solicitud Ajax
-    ajax.open("POST", "../proc/ano.php", true);
-    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Configurar y enviar la solicitud
+    ajax.open("GET", "../proc/ano.php", true);
     ajax.send();
 }
 
@@ -574,89 +587,449 @@ recogerAno();
 
 
 function recogerPais() {
-    // Cogemos el elemento select donde se mostrarán los países
-    var selectPais = document.getElementById("pais_crear");
-
-    // Creamos una solicitud de Ajax
     var ajax = new XMLHttpRequest();
 
-    // Definimos la función que manejará la respuesta de la solicitud Ajax
     ajax.onreadystatechange = function() {
-        // Si la solicitud se ha completado y la respuesta está lista
-        if (ajax.readyState === 4 && ajax.status === 200) {
-            // Parseamos la respuesta JSON
-            // console.log(ajax.responseText)
-            var respuestaPais = ajax.responseText;
-            
-            try {
-                // Convertimos la respuesta JSON a un array de objetos
-                var paisJSON = JSON.parse(respuestaPais);
-                console.log(paisJSON)
-                // Limpiamos el select de países
-                selectPais.innerHTML = "";
-                
-                // Recorremos los países y los añadimos al select
-                for (var i = 0; i < paisJSON.length; i++) {
-                    selectPais.innerHTML += "<option value='" + paisJSON[i].nombre_pais + "</option>";
+        if (ajax.readyState == 4) {
+            if (ajax.status == 200) {
+                try {
+                    var respuestaPais = JSON.parse(ajax.responseText); // Convertir la respuesta a un objeto JavaScript
+                    var selectPais = document.getElementById("pais_crear");
+
+                    // Limpiar opciones existentes
+                    selectPais.innerHTML = "";
+
+                    // Agregar la opción predeterminada
+                    var opciones = document.createElement("option");
+                    opciones.value = "";
+                    opciones.text = "Seleccionar una opción";
+                    selectPais.appendChild(opciones);
+
+                    // Verificar si la respuesta está en el formato esperado
+                    if (Array.isArray(respuestaPais)) {
+                        // Agregar nuevas opciones
+                        respuestaPais.forEach(function(pais) {
+                            var option = document.createElement("option");
+                            option.value = pais.id_pais;
+                            option.text = pais.nombre_pais;
+                            selectPais.appendChild(option);
+                        });
+                    } else {
+                        console.error("La respuesta no es un array:", respuestaPais);
+                    }
+                } catch (e) {
+                    console.error("Error al procesar la respuesta JSON: ", e);
                 }
-            } catch (e) {
-                console.error("Error al parsear la respuesta JSON.");
+            } else {
+                console.error("Error en la solicitud AJAX. Estado: " + ajax.status);
             }
         }
     };
 
-    // Configuramos la solicitud Ajax
-    ajax.open("POST", "../proc/pais.php", true);
-    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Configurar y enviar la solicitud
+    ajax.open("GET", "../proc/pais.php", true);
     ajax.send();
-}
 
-// Llamamos a la función para que se ejecute al cargar la página
+}
 recogerPais();
 
 
-
 function recogerGenero() {
-    // Cogemos el elemento select donde se mostrarán los países
-    var selectGenero = document.getElementById("genero_crear");
-
-    // Creamos una solicitud de Ajax
     var ajax = new XMLHttpRequest();
 
-    // Definimos la función que manejará la respuesta de la solicitud Ajax
     ajax.onreadystatechange = function() {
-        // Si la solicitud se ha completado y la respuesta está lista
-        if (ajax.readyState === 4 && ajax.status === 200) {
-            // Parseamos la respuesta JSON
-            // console.log(ajax.responseText)
-            var respuestaGenero = ajax.responseText;
-            console.log(respuestaGenero)
-            
-            try {
-                // Convertimos la respuesta JSON a un array de objetos
-                var generoJSON = JSON.parse(respuestaGenero);
-                // console.log(respuestaAno)
-                // Limpiamos el select de países
-                selectGenero.innerHTML = "";
-                
-                // Recorremos los países y los añadimos al select
-                for (var i = 0; i < generoJSON.length; i++) {
-                    selectGenero.innerHTML += "<option value='" + paisJSON[i].nombre_gen + "'>" + paisJSON[i].nombre_gen + "</option>";
+        if (ajax.readyState == 4) {
+            if (ajax.status == 200) {
+                try {
+                    var respuestaGenero = JSON.parse(ajax.responseText); // Convertir la respuesta a un objeto JavaScript
+                    var selectGenero = document.getElementById("gen_crear");
+
+                    // Limpiar opciones existentes
+                    selectGenero.innerHTML = "";
+
+                    // Agregar la opción predeterminada
+                    var opciones = document.createElement("option");
+                    opciones.value = "";
+                    opciones.text = "Seleccionar una opción";
+                    selectGenero.appendChild(opciones);
+
+                    // Verificar si la respuesta está en el formato esperado
+                    if (Array.isArray(respuestaGenero)) {
+                        // Agregar nuevas opciones
+                        respuestaGenero.forEach(function(gen) {
+                            var option = document.createElement("option");
+                            option.value = gen.id_gen; // Corregido para usar la propiedad id_genero
+                            option.text = gen.nombre_gen; // Corregido para usar la propiedad nombre_genero
+                            selectGenero.appendChild(option);
+                        });
+                    } else {
+                        console.error("La respuesta no es un array:", respuestaGenero);
+                    }
+                } catch (e) {
+                    console.error("Error al procesar la respuesta JSON: ", e);
                 }
-            } catch (e) {
-                console.error("Error al parsear la respuesta JSON.");
+            } else {
+                console.error("Error en la solicitud AJAX. Estado: " + ajax.status);
             }
         }
     };
 
-    // Configuramos la solicitud Ajax
-    ajax.open("POST", "../proc/genero.php", true);
-    ajax.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Configurar y enviar la solicitud
+    ajax.open("GET", "../proc/genero.php", true);
     ajax.send();
 }
 
 // Llamamos a la función para que se ejecute al cargar la página
 recogerGenero();
+
+
+
+
+function BotonEditar(id_peli) {
+    var form_editar = document.getElementById("form_editar");
+    var crear = document.getElementById("form__crear");
+  
+    // if (form_editar.style.display === "block") {
+    //     // Si es "block", cambia a "none" para ocultar el formulario
+    //     form_editar.style.display = "none";
+    //     crear.style.display = "block";
+    // } else {
+    //     // Si no es "block", cambia a "block" para mostrar el formulario
+    //     form_editar.style.display = "block";
+    //     crear.style.display = "none";
+    // }
+
+    // Creamos una nueva instancia de FormData
+    var formdata = new FormData();
+    // Agregamos una nueva clave y valor al objeto FormData
+    formdata.append('id_peli', id_peli);
+    // Creamos un objeto XMLHttpRequest
+    var ajax = new XMLHttpRequest();
+    // Definimos el método, la URL y establecemos que sea asíncrono
+    ajax.open('POST', '../proc/consulta_editar_pelis.php', true);
+
+    // Definimos la función que se ejecutará cuando la solicitud AJAX esté completa
+    ajax.onload = function () {
+        // Verificamos si la solicitud fue exitosa (código de estado 200)
+        if (ajax.status === 200) {
+            console.log(ajax.responseText)
+            var json = JSON.parse(ajax.responseText);
+
+            // Verificamos si hay datos en la respuesta JSON
+            document.getElementById("id_peli").value = json.id_peli;
+            document.getElementById("desc_editar").value = json.desc_peli;
+            document.getElementById("ano_editar").value = json.id_ano_peli;
+            document.getElementById("pais_editar").value = json.id_pais;
+            document.getElementById("gen_editar").value = json.id_gen;
+        } else {
+            editar.innerHTML = "Error en la solicitud AJAX";
+        }
+    }
+
+    // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+    ajax.send(formdata);
+}
+
+// EDITAR PELÍCULA 
+function EditarPeli() {
+    var editar = document.getElementById("form_editar"); // Obtenemos el elemento con el id "editar"
+
+    // Creamos una nueva instancia de FormData
+    var formdata = new FormData(editar);
+    
+    // Creamos un objeto XMLHttpRequest
+    var ajax = new XMLHttpRequest();
+    // Definimos el método, la URL y establecemos que sea asíncrono
+    ajax.open('POST', '../proc/proc_editar_pelis.php', true);
+
+    // Definimos la función que se ejecutará cuando la solicitud AJAX esté completa
+    ajax.onload = function () {
+        // Verificamos si la solicitud fue exitosa (código de estado 200)
+        if (ajax.status === 200) {
+            console.log(ajax.responseText)
+            if (ajax.responseText === "ok") {
+                // Si la respuesta es "ok", mostramos un mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Película editada',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                // Resetear el formulario
+                editar.reset();
+                // Refrescar el listado de registros y eliminar filtros que haya activos
+                CrudPelis('');
+            } else {
+                // Si la respuesta no es "ok", mostramos un mensaje de error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error al editar la película',
+                    showCancelButton: false,
+                    timer: 1500
+                });
+            }
+        } else {
+            editar.innerHTML = "Error en la solicitud AJAX";
+        }
+    }
+
+    // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+    ajax.send(formdata);
+}
+
+
+function recogerAnoEditar() {
+    var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+            if (ajax.status == 200) {
+                try {
+                    var respuestaAño = JSON.parse(ajax.responseText); // Convertir la respuesta a un objeto JavaScript
+                    var selectAño = document.getElementById("ano_editar");
+
+                    // Limpiar opciones existentes
+                    selectAño.innerHTML = "";
+
+                    // Agregar la opción predeterminada
+                    var opciones = document.createElement("option");
+                    opciones.value = "";
+                    opciones.text = "Seleccionar una opción";
+                    selectAño.appendChild(opciones);
+
+                    // Verificar si la respuesta está en el formato esperado
+                    if (Array.isArray(respuestaAño)) {
+                        // Agregar nuevas opciones
+                        respuestaAño.forEach(function(año) {
+                            var option = document.createElement("option");
+                            option.value = año.id_ano_peli;
+                            option.text = año.ano;
+                            selectAño.appendChild(option);
+                        });
+                    } else {
+                        console.error("La respuesta no es un array:", respuestaAño);
+                    }
+                } catch (e) {
+                    console.error("Error al procesar la respuesta JSON: ", e);
+                }
+            } else {
+                console.error("Error en la solicitud AJAX. Estado: " + ajax.status);
+            }
+        }
+    };
+
+    // Configurar y enviar la solicitud
+    ajax.open("GET", "../proc/ano.php", true);
+    ajax.send();
+}
+
+// Llamamos a la función para que se ejecute al cargar la página
+recogerAnoEditar();
+
+function recogerPaisEditar() {
+    var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+            if (ajax.status == 200) {
+                try {
+                    var respuestaPais = JSON.parse(ajax.responseText); // Convertir la respuesta a un objeto JavaScript
+                    var selectPais = document.getElementById("pais_editar");
+
+                    // Limpiar opciones existentes
+                    selectPais.innerHTML = "";
+
+                    // Agregar la opción predeterminada
+                    var opciones = document.createElement("option");
+                    opciones.value = "";
+                    opciones.text = "Seleccionar una opción";
+                    selectPais.appendChild(opciones);
+
+                    // Verificar si la respuesta está en el formato esperado
+                    if (Array.isArray(respuestaPais)) {
+                        // Agregar nuevas opciones
+                        respuestaPais.forEach(function(pais) {
+                            var option = document.createElement("option");
+                            option.value = pais.id_pais;
+                            option.text = pais.nombre_pais;
+                            selectPais.appendChild(option);
+                        });
+                    } else {
+                        console.error("La respuesta no es un array:", respuestaPais);
+                    }
+                } catch (e) {
+                    console.error("Error al procesar la respuesta JSON: ", e);
+                }
+            } else {
+                console.error("Error en la solicitud AJAX. Estado: " + ajax.status);
+            }
+        }
+    };
+
+    // Configurar y enviar la solicitud
+    ajax.open("GET", "../proc/pais.php", true);
+    ajax.send();
+
+}
+recogerPaisEditar();
+
+
+function recogerGeneroEditar() {
+    var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4) {
+            if (ajax.status == 200) {
+                try {
+                    var respuestaGenero = JSON.parse(ajax.responseText); // Convertir la respuesta a un objeto JavaScript
+                    var selectGenero = document.getElementById("gen_editar");
+
+                    // Limpiar opciones existentes
+                    selectGenero.innerHTML = "";
+
+                    // Agregar la opción predeterminada
+                    var opciones = document.createElement("option");
+                    opciones.value = "";
+                    opciones.text = "Seleccionar una opción";
+                    selectGenero.appendChild(opciones);
+
+                    // Verificar si la respuesta está en el formato esperado
+                    if (Array.isArray(respuestaGenero)) {
+                        // Agregar nuevas opciones
+                        respuestaGenero.forEach(function(gen) {
+                            var option = document.createElement("option");
+                            option.value = gen.id_gen; // Corregido para usar la propiedad id_genero
+                            option.text = gen.nombre_gen; // Corregido para usar la propiedad nombre_genero
+                            selectGenero.appendChild(option);
+                        });
+                    } else {
+                        console.error("La respuesta no es un array:", respuestaGenero);
+                    }
+                } catch (e) {
+                    console.error("Error al procesar la respuesta JSON: ", e);
+                }
+            } else {
+                console.error("Error en la solicitud AJAX. Estado: " + ajax.status);
+            }
+        }
+    };
+
+    // Configurar y enviar la solicitud
+    ajax.open("GET", "../proc/genero.php", true);
+    ajax.send();
+}
+
+// Llamamos a la función para que se ejecute al cargar la página
+recogerGeneroEditar();
+
+
+// ELIMINAR USUARIO
+function BotonEliminar(id_peli) {
+    Swal.fire({
+        title: "¿Estás seguro?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí",
+        cancelButtonText: "No"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Creamos una nueva instancia de FormData
+            var formdata = new FormData();
+            // Agregamos una nueva clave y valor al objeto FormData
+            formdata.append('id_peli', id_peli);
+            // Creamos un objeto XMLHttpRequest
+            var ajax = new XMLHttpRequest();
+            // Definimos el método, la URL y establecemos que sea asíncrono
+            ajax.open('POST', '../proc/proc_eliminar_pelis.php', true);
+            ajax.onload = function() {
+                if (ajax.status === 200) {
+                    if (ajax.responseText === "ok") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Película eliminada',
+                            showCancelButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            // Recargar la página o realizar alguna otra acción necesaria
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error al eliminar la película',
+                            showCancelButton: false,
+                            timer: 1500
+                        });
+                    }
+                }
+            }
+            // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+            ajax.send(formdata);
+        }
+    });
+}
+
+
+// function crearPeli(id_peli) {
+//     // Obtenemos el elemento con el id "form_crear"
+//     var crear = document.getElementById("form__crear");
+
+
+//     if (crear.style.display === "block") {
+//         // Si es "block", cambia a "none" para ocultar el formulario
+//         crear.style.display = "none";
+//     } else {
+//         // Si no es "block", cambia a "block" para mostrar el formulario
+//         crear.style.display = "block";
+//     }
+//     // Creamos una nueva instancia de FormData
+//     var formdata = new FormData(crear);
+
+//     // Agregamos nueva clave y valor al objeto FormData
+//     formdata.append('id_peli', id_peli);
+
+//     // Creamos el objeto XMLHttpRequest
+//     var ajax = new XMLHttpRequest();
+
+//     // Definimos método, URL y que sea asíncrono
+//     ajax.open('POST', './crear_pelis.php', true);
+
+//     // Definimos la función que se ejecutará cuando la solicitud AJAX sea completada
+//     ajax.onload = function() {
+//         // Variable para construir las filas de la tabla HTM
+
+//         // Verificamos si la solicitud fue exitosa (código de estado 200)
+//         if (ajax.status === 200) {
+//             if (ajax.responseText == "ok") {
+//                 Swal.fire({
+//                     icon: 'success',
+//                     title: 'Pelicula creado',
+//                     showConfirmButton: false,
+//                     timer: 1500
+//                 });
+//                 // Resetear el formulario
+//                 crear.reset();
+//                 // Refrescar el listado de registros y eliminar filtros que haya activos
+//                 listarUsuarios('');
+                
+//             }else{
+//                 Swal.fire({
+//                     icon: 'error',
+//                     title: 'Error al crear la película',
+//                     showCancelButton: false,
+//                     timer: 1500
+//                 });
+//             }
+//         }
+                
+
+//     };
+
+//     // Enviamos la solicitud HTTP al servidor con los datos en 'formdata'
+//     ajax.send(formdata);
+// }
 
 // function validar_registrar () {
 

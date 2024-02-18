@@ -15,9 +15,9 @@ $correo_ini = $_SESSION['admin'];
 require_once("./conexion.php"); // Conexión a la base de datos
 
 // Obtén el ID del rol utilizando el tipo de rol
-$sql_get_ano = "SELECT ano FROM tbl_ano"; // Modificado para seleccionar id_ano_peli además de ano
+$sql_get_ano = "SELECT * FROM tbl_ano"; // Modificado para seleccionar id_ano_peli además de ano
 $stmt_get_ano = $pdo->prepare($sql_get_ano);
 $stmt_get_ano->execute();
- echo $resultado = $stmt_get_ano->fetchColumn(PDO::FETCH_ASSOC);
+$resultado = $stmt_get_ano->fetchAll(PDO::FETCH_ASSOC);
 echo json_encode($resultado); // Enviamos el resultado mediante JSON
 ?>
